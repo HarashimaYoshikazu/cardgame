@@ -6,7 +6,8 @@ public class TurnCycle : MonoBehaviour
 {
     enum EventEnum 
     {
-
+        MyTurn,
+        OpponentTurn
     }
     StateMachine<EventEnum> _stateMachine = null;
 

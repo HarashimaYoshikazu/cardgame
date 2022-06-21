@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-/// ステートマシンクラス（書籍、動画を参考）
+/// ステートマシンクラス
 public class StateMachine<Event> where Event : System.Enum
 {
     /// <summary>
