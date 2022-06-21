@@ -19,7 +19,7 @@ public class InventryCard : MonoBehaviour
 
     CardData _cardData;
 
-
+    bool _isDeck = false;
     private void Start()
     {
         Init();
@@ -35,7 +35,9 @@ public class InventryCard : MonoBehaviour
         }
 
         _image.sprite = _cardData.Sprite;
-        //_button.onClick.AddListener(() =>);
+
+        _button.onClick.AddListener(() => GameManager.Instance.SetCard(this,_isDeck));
+        _button.onClick.AddListener(() => _isDeck = !_isDeck);
     }
 
     void Init()
