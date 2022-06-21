@@ -15,4 +15,4 @@ MonoBehaviour:
   _name: "\u3086\u3046\u3057\u3083"
   _skillValue: 2
   _element: 0
-  _sprite: {fileID: 0}
+  _sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
