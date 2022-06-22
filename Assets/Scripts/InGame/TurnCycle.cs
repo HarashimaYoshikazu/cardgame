@@ -17,6 +17,12 @@ public class TurnCycle : MonoBehaviour
     {
         _stateMachine = new StateMachine<EventEnum>();
 
+        _stateMachine.AddTransition<StartState, MyTurn>(EventEnum.GameStart);
+        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd);
+        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd);
+
+        _stateMachine.AddAnyTransition<EndState>(EventEnum.Result);
+
         _stateMachine.StartSetUp<StartState>();
     }
 
