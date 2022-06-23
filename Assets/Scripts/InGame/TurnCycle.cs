@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class TurnCycle : MonoBehaviour
 {
     enum EventEnum 
@@ -17,13 +17,23 @@ public class TurnCycle : MonoBehaviour
     {
         _stateMachine = new StateMachine<EventEnum>();
 
-        _stateMachine.AddTransition<StartState, MyTurn>(EventEnum.GameStart);
-        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd);
-        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd);
+        _stateMachine.AddTransition<StartState, MyTurn>(EventEnum.GameStart,IsDeath);
+        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
+        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd, IsDeath);
 
         _stateMachine.AddAnyTransition<EndState>(EventEnum.Result);
 
         _stateMachine.StartSetUp<StartState>();
+    }
+
+    int hp = 0;
+    bool IsDeath()
+    {
+        if (hp<1)
+        {
+            return true;
+        }
+        return false;
     }
 
     class StartState : StateMachine<EventEnum>.State
