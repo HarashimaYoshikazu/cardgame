@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TurnCycle : MonoBehaviour
 {
+    List<InventryCard> _inventryCards = new List<InventryCard>();
+    List<InventryCard> _decksCards = new List<InventryCard>();
     enum EventEnum 
     {
         GameStart,
@@ -20,11 +22,17 @@ public class TurnCycle : MonoBehaviour
         _stateMachine.StartSetUp<StartState>();
     }
 
+    private void Update()
+    {
+        _inventryCards = GameManager.Instance._inventryCards;
+        _decksCards = GameManager.Instance._decksCards;
+    }
+
     class StartState : StateMachine<EventEnum>.State
     {
         protected override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            GameManager.Instance.SetUp();
+            HomeManager.Instance.DeckCustomUIManager.UISetUp();
         }
     }
 
