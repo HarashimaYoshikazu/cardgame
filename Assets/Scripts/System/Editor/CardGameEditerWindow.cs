@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class CardGameEditerWindow : EditorWindow
 {
-
     DefaultAsset _TargetFolder;
     private CardBaseSO _sample;
     [MenuItem("Editor/CardGame")]
@@ -38,7 +37,8 @@ public class CardGameEditerWindow : EditorWindow
 
         using (new GUILayout.HorizontalScope())
         {
-            _sample.Sprite = EditorGUILayout.ObjectField("Sprite", _TargetFolder, typeof(Sprite), false) as Sprite;
+            //_sample.Sprite = EditorGUILayout.ObjectField
+            _sample.Sprite = EditorGUILayout.ObjectField("Sprite",_sample.Sprite, typeof(Sprite), false) as Sprite;
         }
 
         using (new GUILayout.HorizontalScope())
@@ -56,7 +56,7 @@ public class CardGameEditerWindow : EditorWindow
     }
 
 
-    private const string ASSET_PATH = "Assets/Resources/WindowCard";
+    private const string ASSET_PATH = "Assets/Resources/WindowCard.asset";
     private void Export()
     {
         // êVãKÇÃèÍçáÇÕçÏê¨

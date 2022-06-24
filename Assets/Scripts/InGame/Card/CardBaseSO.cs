@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-[CreateAssetMenu, Serializable]
+[ Serializable]
 public class CardBaseSO : ScriptableObject
 {
     [SerializeField, Tooltip("カードの名前")]
