@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 /// ステートマシンクラス
 public class StateMachine<Event> where Event : System.Enum
@@ -72,26 +73,30 @@ public class StateMachine<Event> where Event : System.Enum
     }
 
     /// <param name="eventId">イベントID</param>
-    public void AddTransition<TFrom, TTo>(Event eventId)
+    public void AddTransition<TFrom, TTo>(Event eventId,Func<bool> isTransition)
         where TFrom : State, new()
         where TTo : State, new()
     {
-        var from = GetOrAddState<TFrom>();
-        if (from.transitions.ContainsKey(eventId))
+        if (isTransition())
         {
-            // 同じイベントIDの遷移を定義済
-            throw new System.ArgumentException(
-                $"ステート'{nameof(TFrom)}'に対してイベントID'{eventId.ToString()}'の遷移は定義済です");
+            var from = GetOrAddState<TFrom>();
+            if (from.transitions.ContainsKey(eventId))
+            {
+                // 同じイベントIDの遷移を定義済
+                throw new System.ArgumentException(
+                    $"ステート'{nameof(TFrom)}'に対してイベントID'{eventId.ToString()}'の遷移は定義済です");
+            }
+
+            var to = GetOrAddState<TTo>();
+            from.transitions.Add(eventId, to);
         }
 
-        var to = GetOrAddState<TTo>();
-        from.transitions.Add(eventId, to);
     }
 
 
     public void AddAnyTransition<TTo>(Event eventId) where TTo : State, new()
     {
-        AddTransition<AnyState, TTo>(eventId);
+        AddTransition<AnyState, TTo>(eventId,()=>true);
     }
 
 

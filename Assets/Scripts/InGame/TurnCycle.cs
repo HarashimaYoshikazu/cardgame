@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class TurnCycle : MonoBehaviour
 {
-    List<InventryCard> _inventryCards = new List<InventryCard>();
-    List<InventryCard> _decksCards = new List<InventryCard>();
     enum EventEnum 
     {
         GameStart,
@@ -19,20 +17,30 @@ public class TurnCycle : MonoBehaviour
     {
         _stateMachine = new StateMachine<EventEnum>();
 
+        _stateMachine.AddTransition<StartState, MyTurn>(EventEnum.GameStart,IsDeath);
+        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
+        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd, IsDeath);
+
+        _stateMachine.AddAnyTransition<EndState>(EventEnum.Result);
+
         _stateMachine.StartSetUp<StartState>();
     }
 
-    private void Update()
+    int hp = 0;
+    bool IsDeath()
     {
-        _inventryCards = GameManager.Instance._inventryCards;
-        _decksCards = GameManager.Instance._decksCards;
+        if (hp<1)
+        {
+            return true;
+        }
+        return false;
     }
 
     class StartState : StateMachine<EventEnum>.State
     {
         protected override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            HomeManager.Instance.DeckCustomUIManager.UISetUp();
+            GameManager.Instance.SetUp();
         }
     }
 
