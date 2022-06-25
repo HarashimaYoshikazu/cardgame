@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 
 
 public class CardGameEditerWindow : EditorWindow
 {
+    List<CardBaseSO> cards = new List<CardBaseSO>();
     private CardBaseSO _sample;
     [MenuItem("Editor/CardGame")]
     private static void Create()
@@ -14,7 +15,7 @@ public class CardGameEditerWindow : EditorWindow
         GetWindow<CardGameEditerWindow>("CardGameWindow");
     }
 
-    private readonly string[] _tabToggles = { "TabA", "TabB", "TabC" };
+    private readonly string[] _tabToggles = { "カード作成", "デッキ構築", "蛇足" };
 
     private int _tabIndex;
 
@@ -22,7 +23,8 @@ public class CardGameEditerWindow : EditorWindow
     {
         if (_sample == null)
         {
-            _sample = ScriptableObject.CreateInstance<CardBaseSO>();
+            // 読み込み
+            Import();
         }
 
         //タブ
@@ -31,7 +33,6 @@ public class CardGameEditerWindow : EditorWindow
             _tabIndex = GUILayout.Toolbar(_tabIndex, _tabToggles, new GUIStyle(EditorStyles.toolbarButton), GUI.ToolbarButtonSize.FitToContents);
 
         }
-        EditorGUILayout.LabelField(_tabToggles[_tabIndex]);
 
         switch (_tabIndex)
         {
@@ -56,19 +57,38 @@ public class CardGameEditerWindow : EditorWindow
                     //_sample.Sprite = EditorGUILayout.ObjectField
                     _sample.Sprite = EditorGUILayout.ObjectField("Sprite", _sample.Sprite, typeof(Sprite), false) as Sprite;
                 }
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("読み込み"))
+                    {
+                        Import();
+                    }
+
+                    if (GUILayout.Button("書き出し"))
+                    {
+                        Export();
+                    }
+                }
+
                 break;
         }
 
 
-
     }
-
 
     private const string ASSET_PATH = "Assets/Resources/WindowCard.asset";
     private void Export()
     {
+        // 読み込み
+        CardBaseSO sample = AssetDatabase.LoadAssetAtPath<CardBaseSO>(ASSET_PATH);
+        if (sample == null)
+        {
+            sample = ScriptableObject.CreateInstance<CardBaseSO>();
+        }
+
         // 新規の場合は作成
-        if (!AssetDatabase.Contains(_sample as UnityEngine.Object))
+        if (!AssetDatabase.Contains(sample as UnityEngine.Object))
         {
             string directory = Path.GetDirectoryName(ASSET_PATH);
             if (!Directory.Exists(directory))
@@ -76,12 +96,17 @@ public class CardGameEditerWindow : EditorWindow
                 Directory.CreateDirectory(directory);
             }
             // アセット作成
-            AssetDatabase.CreateAsset(_sample, ASSET_PATH);
+            AssetDatabase.CreateAsset(sample, ASSET_PATH);
         }
-        // インスペクターから設定できないようにする
-        _sample.hideFlags = HideFlags.NotEditable;
+
+        // コピー
+        //sample.Copy(_sample);
+        EditorUtility.CopySerialized(_sample, sample);
+
+        // 直接編集できないようにする
+        sample.hideFlags = HideFlags.NotEditable;
         // 更新通知
-        EditorUtility.SetDirty(_sample);
+        EditorUtility.SetDirty(sample);
         // 保存
         AssetDatabase.SaveAssets();
         // エディタを最新の状態にする
@@ -90,10 +115,17 @@ public class CardGameEditerWindow : EditorWindow
 
     private void Import()
     {
+        if (_sample == null)
+        {
+            _sample = ScriptableObject.CreateInstance<CardBaseSO>();
+        }
+
         CardBaseSO sample = AssetDatabase.LoadAssetAtPath<CardBaseSO>(ASSET_PATH);
         if (sample == null)
             return;
 
-        _sample = sample;
+        // コピーする
+        //_sample.Copy(sample);
+        EditorUtility.CopySerialized(sample, _sample);
     }
 }
