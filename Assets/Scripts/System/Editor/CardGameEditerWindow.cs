@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 using System.IO;
-using UnityEngine.UI;
+
 
 public class CardGameEditerWindow : EditorWindow
 {
@@ -13,12 +14,24 @@ public class CardGameEditerWindow : EditorWindow
         // ê∂ê¨
         GetWindow<CardGameEditerWindow>("CardGameWindow");
     }
+
+    private readonly string[] _tabToggles = { "TabA", "TabB", "TabC" };
+
+    private int _tabIndex;
+
     private void OnGUI()
     {
         if (_sample == null)
         {
             _sample = ScriptableObject.CreateInstance<CardBaseSO>();
         }
+
+        //É^Éu
+        using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
+        {
+            _tabIndex = GUILayout.Toolbar(_tabIndex, _tabToggles, new GUIStyle(EditorStyles.toolbarButton), GUI.ToolbarButtonSize.FitToContents);
+        }
+        EditorGUILayout.LabelField(_tabToggles[_tabIndex]);
 
         using (new GUILayout.HorizontalScope())
         {
