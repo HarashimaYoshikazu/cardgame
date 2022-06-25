@@ -6,7 +6,6 @@ using System.IO;
 
 public class CardGameEditerWindow : EditorWindow
 {
-    DefaultAsset _TargetFolder;
     private CardBaseSO _sample;
     [MenuItem("Editor/CardGame")]
     private static void Create()
@@ -30,42 +29,38 @@ public class CardGameEditerWindow : EditorWindow
         using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
         {
             _tabIndex = GUILayout.Toolbar(_tabIndex, _tabToggles, new GUIStyle(EditorStyles.toolbarButton), GUI.ToolbarButtonSize.FitToContents);
+
         }
         EditorGUILayout.LabelField(_tabToggles[_tabIndex]);
 
-        using (new GUILayout.HorizontalScope())
+        switch (_tabIndex)
         {
-            _sample.Name = EditorGUILayout.TextField("カードの名前", _sample.Name);            
+            case 0:
+                using (new GUILayout.HorizontalScope())
+                {
+                    _sample.Name = EditorGUILayout.TextField("カードの名前", _sample.Name);
+                }
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    _sample.SkillValue = EditorGUILayout.IntField("スキルの数", _sample.SkillValue);
+                }
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    _sample.Element = (Elements)EditorGUILayout.EnumFlagsField("属性", _sample.Element);
+                }
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    //_sample.Sprite = EditorGUILayout.ObjectField
+                    _sample.Sprite = EditorGUILayout.ObjectField("Sprite", _sample.Sprite, typeof(Sprite), false) as Sprite;
+                }
+                break;
         }
 
-        using (new GUILayout.HorizontalScope())
-        {
-            _sample.SkillValue = EditorGUILayout.IntField("スキルの数", _sample.SkillValue);
-        }
 
-        using (new GUILayout.HorizontalScope())
-        {
-            _sample.Element = (Elements)EditorGUILayout.EnumFlagsField("属性",_sample.Element);
-        }
 
-        using (new GUILayout.HorizontalScope())
-        {
-            //_sample.Sprite = EditorGUILayout.ObjectField
-            _sample.Sprite = EditorGUILayout.ObjectField("Sprite",_sample.Sprite, typeof(Sprite), false) as Sprite;
-        }
-
-        using (new GUILayout.HorizontalScope())
-        {
-            // 書き込みボタン
-            if (GUILayout.Button("書き込み"))
-            {
-                Export();
-            }
-            if (GUILayout.Button("読み込み"))
-            {
-                Import();
-            }
-        }
     }
 
 
