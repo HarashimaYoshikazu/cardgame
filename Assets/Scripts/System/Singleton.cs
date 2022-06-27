@@ -3,21 +3,21 @@ using UnityEngine;
 /// <summary>
 /// MonoBehaviorを継承しないSingletonクラス
 /// </summary>
-/// <typeparam name="T">instanceを作成する派生クラス</typeparam>
-public class Singleton<T>where T : Singleton<T>, new()
+/// <typeparam name="SingletonT">instanceを作成する派生クラス</typeparam>
+public class Singleton<SingletonT>where SingletonT : Singleton<SingletonT>, new()
 {
-    private static T _instance;
+    static SingletonT _instance;
 
-    public static T Instance
+    public static SingletonT Instance
     {
         get
         {
-            return GetOrCreateInstance<T>();
+            return GetOrCreateInstance<SingletonT>();
         }
     }
 
     protected static InheritSingletonType GetOrCreateInstance<InheritSingletonType>()
-        where InheritSingletonType : class, T, new()
+        where InheritSingletonType : class, SingletonT, new()
     {
         if (IsCreated)
         {

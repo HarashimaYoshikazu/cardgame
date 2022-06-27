@@ -45,6 +45,9 @@ public class CardBaseSO : ScriptableObject
     }
 }
 
+/// <summary>
+/// ƒJ[ƒh‚Ì‘®«
+/// </summary>
 public enum Elements
 {
     Fire,
