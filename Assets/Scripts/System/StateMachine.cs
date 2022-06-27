@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System;
 
-/// ステートマシンクラス
+/// <summary>
+/// StateMachineクラス
+/// </summary>
 public class StateMachine<Event> where Event : System.Enum
 {
     /// <summary>
@@ -10,26 +12,26 @@ public class StateMachine<Event> where Event : System.Enum
     public abstract class State
     {
         protected StateMachine<Event> StateMachine => stateMachine;
-        internal StateMachine<Event> stateMachine;
+        public StateMachine<Event> stateMachine;
 
-        internal Dictionary<Event, State> transitions = new Dictionary<Event, State>();
+        public Dictionary<Event, State> transitions = new Dictionary<Event, State>();
 
 
-        internal void Enter(State prevState)
+        public void Enter(State prevState)
         {
             OnEnter(prevState);
         }
-        protected virtual void OnEnter(State prevState) { }
+        public virtual void OnEnter(State prevState) { }
 
 
-        internal void Update()
+        public void Update()
         {
             OnUpdate();
         }
 
         protected virtual void OnUpdate() { }
 
-        internal void Exit(State nextState)
+        public void Exit(State nextState)
         {
             OnExit(nextState);
         }
@@ -134,7 +136,7 @@ public class StateMachine<Event> where Event : System.Enum
         Change(to);
     }
 
-    private void Change(State nextState)
+    void Change(State nextState)
     {
         CurrentState.Exit(nextState);
         nextState.Enter(CurrentState);

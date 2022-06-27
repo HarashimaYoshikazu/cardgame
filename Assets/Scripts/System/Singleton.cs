@@ -1,13 +1,10 @@
-using System;
 using UnityEngine;
 
 /// <summary>
 /// MonoBehaviorを継承しないSingletonクラス
 /// </summary>
 /// <typeparam name="T">instanceを作成する派生クラス</typeparam>
-public class Singleton<T>
-                    : IDisposable
-                    where T : Singleton<T>, new()
+public class Singleton<T>where T : Singleton<T>, new()
 {
     private static T _instance;
 
@@ -44,11 +41,6 @@ public class Singleton<T>
     public static bool IsCreated
     {
         get { return _instance != null; }
-    }
-
-    public virtual void Dispose()
-    {
-        _instance = default;
     }
 
     /// <summary>

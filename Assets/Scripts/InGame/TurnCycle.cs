@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+
+/// <summary>
+/// ターンの遷移を制御するクラス
+/// </summary>
 public class TurnCycle : MonoBehaviour
 {
     enum EventEnum 
@@ -13,7 +14,7 @@ public class TurnCycle : MonoBehaviour
     }
     StateMachine<EventEnum> _stateMachine = null;
 
-    private void Awake()
+    void Awake()
     {
         _stateMachine = new StateMachine<EventEnum>();
 
@@ -38,9 +39,9 @@ public class TurnCycle : MonoBehaviour
 
     class StartState : StateMachine<EventEnum>.State
     {
-        protected override void OnEnter(StateMachine<EventEnum>.State prevState)
+        public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            HomeManager.Instance.DeckCustomUIManager.UISetUp();
+            HomeManager.Instance.DeckCustomUIManager.SetUpUIObject();
         }
     }
 

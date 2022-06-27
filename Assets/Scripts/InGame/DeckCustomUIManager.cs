@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// デッキをUI上に表示するマネージャークラス
+/// </summary>
 public class DeckCustomUIManager : MonoBehaviour
 {
     Canvas _canvas = null;
     GameObject[] _panels = new GameObject[2];
 
-    private void Awake()
-    {
-        HomeManager.Instance.SetDeckCustomUIManager(this);
-    }
-
-    public void UISetUp()
+    /// <summary>
+    /// UIオブジェクトを動的に生成する関数
+    /// </summary>
+    public void SetUpUIObject()
     {
         _canvas = GameObject.FindObjectOfType<Canvas>();
         _panels[0] = GameObject.Instantiate(Resources.Load<GameObject>("UIPrefabs/Decks"), _canvas.transform);
@@ -33,6 +32,11 @@ public class DeckCustomUIManager : MonoBehaviour
         GameManager.Instance.InventryCards.Add(card.GetComponent<InventryCard>());
     }
 
+    /// <summary>
+    /// カードをデッキ若しくはインベントリにセットする関数
+    /// </summary>
+    /// <param name="card">セットするカード</param>
+    /// <param name="isDeck">どちらにセットするか</param>
     public void SetCard(InventryCard card, bool isDeck)
     {
         if (isDeck)

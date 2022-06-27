@@ -7,19 +7,19 @@ using System.IO;
 public class CardGameEditerWindow : EditorWindow
 {
     List<CardBaseSO> cards = new List<CardBaseSO>();
-    private CardBaseSO _sample;
+    CardBaseSO _sample;
     [MenuItem("Editor/CardGame")]
-    private static void Create()
+    static void Create()
     {
         // 生成
         GetWindow<CardGameEditerWindow>("CardGameWindow");
     }
 
-    private readonly string[] _tabToggles = { "カード作成", "デッキ構築", "蛇足" };
+    readonly string[] _tabToggles = { "カード作成", "デッキ構築"};
 
-    private int _tabIndex;
+    int _tabIndex;
 
-    private void OnGUI()
+    void OnGUI()
     {
         if (_sample == null)
         {
@@ -77,8 +77,8 @@ public class CardGameEditerWindow : EditorWindow
 
     }
 
-    private const string ASSET_PATH = "Assets/Resources/WindowCard.asset";
-    private void Export()
+    const string ASSET_PATH = "Assets/Resources/WindowCard.asset";
+    void Export()
     {
         // 読み込み
         CardBaseSO sample = AssetDatabase.LoadAssetAtPath<CardBaseSO>(ASSET_PATH);
@@ -113,7 +113,7 @@ public class CardGameEditerWindow : EditorWindow
         AssetDatabase.Refresh();
     }
 
-    private void Import()
+    void Import()
     {
         if (_sample == null)
         {
