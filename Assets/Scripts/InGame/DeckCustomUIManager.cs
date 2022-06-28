@@ -14,6 +14,10 @@ public class DeckCustomUIManager : MonoBehaviour
     public void SetUpUIObject()
     {
         _canvas = GameObject.FindObjectOfType<Canvas>();
+        if (!_canvas)
+        {
+            _canvas = Resources.Load<Canvas>("UIPrefabs/Canvas");
+        }
         _panels[0] = GameObject.Instantiate(Resources.Load<GameObject>("UIPrefabs/Decks"), _canvas.transform);
         _panels[1] = GameObject.Instantiate(Resources.Load<GameObject>("UIPrefabs/Inventry"), _canvas.transform); ;
 
