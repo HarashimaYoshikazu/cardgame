@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// ゲーム全体を通して保存したい情報を制御するクラス
@@ -21,6 +22,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (_decksCards.Count < _cardLimit)
         {
+            card.SetIsDeck(true);
             _decksCards.Add(card);
         }
     }
@@ -33,4 +35,22 @@ public class GameManager : Singleton<GameManager>
     {
         _decksCards.Remove(card);
     }
+
+    GameCycle _gameCycle = null;
+    public GameCycle GameCycle
+    {
+        get
+        {
+            if (!_gameCycle)
+            {
+                GameObject go = new GameObject();
+                go.name = "DeckCustomUIManager";
+                var deckCustom = go.AddComponent<GameCycle>();
+                _gameCycle = deckCustom;
+            }
+            return _gameCycle;
+        }
+        set { _gameCycle = value; }
+    }
+
 }

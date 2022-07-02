@@ -42,7 +42,7 @@ public class DeckCustomManager : MonoBehaviour
     /// カードをデッキ若しくはインベントリにセットする関数
     /// </summary>
     /// <param name="card">セットするカード</param>
-    /// <param name="isDeck">どちらにセットするか</param>
+    /// <param name="isDeck">現在の状態</param>
     public void SetCard(InventryCard card, bool isDeck)
     {
         if (isDeck)
@@ -57,6 +57,7 @@ public class DeckCustomManager : MonoBehaviour
             GameManager.Instance.AddCardToDeck(card);
             card.gameObject.transform.SetParent(_deckPanel.transform);
         }
+        card.SetIsDeck(!isDeck);
 
     }
 }

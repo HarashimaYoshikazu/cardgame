@@ -13,6 +13,6 @@ public class ChangeSceneButton : MonoBehaviour
         _button = GetComponent<Button>();
 
         _button.onClick.AddListener
-            (() => { SceneManager.LoadScene(_sceneName); } );
+            (() => { GameManager.Instance.GameCycle.GoBattle(); } );
     }
 }

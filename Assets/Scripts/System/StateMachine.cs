@@ -74,8 +74,29 @@ public class StateMachine<Event> where Event : System.Enum
         return Add<T>();
     }
 
+
     /// <param name="eventId">イベントID</param>
-    public void AddTransition<TFrom, TTo>(Event eventId,Func<bool> isTransition)
+    public void AddTransition<TFrom, TTo>(Event eventId)
+        where TFrom : State, new()
+        where TTo : State, new()
+    {
+
+        var from = GetOrAddState<TFrom>();
+        if (from.transitions.ContainsKey(eventId))
+        {
+            // 同じイベントIDの遷移を定義済
+            throw new System.ArgumentException(
+                $"ステート'{nameof(TFrom)}'に対してイベントID'{eventId.ToString()}'の遷移は定義済です");
+        }
+
+        var to = GetOrAddState<TTo>();
+        from.transitions.Add(eventId, to);
+
+
+    }
+
+    /// <param name="eventId">イベントID</param>
+    public void AddTransition<TFrom, TTo>(Event eventId, Func<bool> isTransition)
         where TFrom : State, new()
         where TTo : State, new()
     {
@@ -98,7 +119,7 @@ public class StateMachine<Event> where Event : System.Enum
 
     public void AddAnyTransition<TTo>(Event eventId) where TTo : State, new()
     {
-        AddTransition<AnyState, TTo>(eventId,()=>true);
+        AddTransition<AnyState, TTo>(eventId, () => true);
     }
 
 
@@ -108,7 +129,7 @@ public class StateMachine<Event> where Event : System.Enum
     }
 
 
-    public void Start(State firstState)
+    void Start(State firstState)
     {
         CurrentState = firstState;
         CurrentState.Enter(null);

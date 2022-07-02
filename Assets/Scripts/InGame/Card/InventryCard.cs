@@ -40,9 +40,13 @@ public class InventryCard : MonoBehaviour
             (() =>
             {
                 HomeManager.Instance.DeckCustomUIManager.SetCard(this, _isDeck);
-                _button.onClick.AddListener(() => _isDeck = !_isDeck);
             });
 
+    }
+
+    public void SetIsDeck(bool isdeck)
+    {
+        _isDeck = isdeck;
     }
 
     void Init()

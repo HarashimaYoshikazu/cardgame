@@ -6,7 +6,8 @@ using UnityEngine;
 public class DeckCustomUIManager : MonoBehaviour
 {
     Canvas _canvas = null;
-    GameObject[] _panels = new GameObject[2];
+    GameObject _inventryPanel = null;
+    GameObject _deckPanel = null;
 
     /// <summary>
     /// UIオブジェクトを動的に生成する関数
@@ -18,22 +19,20 @@ public class DeckCustomUIManager : MonoBehaviour
         {
             _canvas = Resources.Load<Canvas>("UIPrefabs/Canvas");
         }
-        _panels[0] = GameObject.Instantiate(Resources.Load<GameObject>("UIPrefabs/Decks"), _canvas.transform);
-        _panels[1] = GameObject.Instantiate(Resources.Load<GameObject>("UIPrefabs/Inventry"), _canvas.transform); ;
+        _deckPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Decks"), _canvas.transform);
+        _inventryPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Inventry"), _canvas.transform); ;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
-            CreateInventryCard(1);
+            CreateDeckCard(1);
         }
     }
 
-    void CreateInventryCard(int id)
+    void CreateDeckCard(int id)
     {
         var go = Resources.Load<GameObject>($"CardPrefab/Card{id}");
-        Debug.Log(go);
-        Debug.Log(_panels[1]);
-        var card = GameObject.Instantiate(go, _panels[1].transform);
-        GameManager.Instance.InventryCards.Add(card.GetComponent<InventryCard>());
+        var card = Instantiate(go, _deckPanel.transform);
+        GameManager.Instance.AddCardToDeck(card.GetComponent<InventryCard>());
     }
 
     /// <summary>
@@ -47,13 +46,13 @@ public class DeckCustomUIManager : MonoBehaviour
         {
             GameManager.Instance.RemoveCardToDeck(card);
             GameManager.Instance.InventryCards.Add(card);
-            card.gameObject.transform.SetParent(_panels[1].transform);
+            card.gameObject.transform.SetParent(_deckPanel.transform);
         }
         else
         {
             GameManager.Instance.InventryCards.Remove(card);
             GameManager.Instance.AddCardToDeck(card);
-            card.gameObject.transform.SetParent(_panels[0].transform);
+            card.gameObject.transform.SetParent(_inventryPanel.transform);
         }
 
     }
