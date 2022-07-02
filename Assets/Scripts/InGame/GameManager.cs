@@ -10,6 +10,27 @@ public class GameManager : Singleton<GameManager>
     public List<InventryCard> InventryCards => _inventryCards;
 
     List<InventryCard> _decksCards = new List<InventryCard>();
-    /// <summary>デッキのカードリスト</summary>
-    public List <InventryCard> DeckCards => _decksCards;
+
+    int _cardLimit = 20;
+
+    /// <summary>
+    /// デッキのリストにカードを追加する関数
+    /// </summary>
+    /// <param name="card">追加したいカードクラス</param>
+    public void AddCardToDeck(InventryCard card)
+    {
+        if (_decksCards.Count < _cardLimit)
+        {
+            _decksCards.Add(card);
+        }
+    }
+
+    /// <summary>
+    /// デッキのリストからカードを削除する関数
+    /// </summary>
+    /// <param name="card">削除したいカードクラス</param>
+    public void RemoveCardToDeck(InventryCard card)
+    {
+        _decksCards.Remove(card);
+    }
 }

@@ -36,8 +36,13 @@ public class InventryCard : MonoBehaviour
 
         _image.sprite = _cardData.Sprite;
 
-        _button.onClick.AddListener(() => HomeManager.Instance.DeckCustomUIManager.SetCard(this,_isDeck));
-        _button.onClick.AddListener(() => _isDeck = !_isDeck);
+        _button.onClick.AddListener
+            (() =>
+            {
+                HomeManager.Instance.DeckCustomUIManager.SetCard(this, _isDeck);
+                _button.onClick.AddListener(() => _isDeck = !_isDeck);
+            });
+
     }
 
     void Init()

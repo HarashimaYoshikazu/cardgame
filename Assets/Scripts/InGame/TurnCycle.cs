@@ -41,7 +41,7 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            HomeManager.Instance.DeckCustomUIManager.SetUpUIObject();
+            
         }
     }
 
