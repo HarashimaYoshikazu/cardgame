@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 public class ChangeSceneButton : MonoBehaviour
 {
     Button _button;
-    [SerializeField]
-    string _sceneName = "Battle";
     private void Awake()
     {
         _button = GetComponent<Button>();

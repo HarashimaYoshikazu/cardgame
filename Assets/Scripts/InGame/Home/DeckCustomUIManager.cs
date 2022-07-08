@@ -48,12 +48,12 @@ public class DeckCustomUIManager : MonoBehaviour
         if (isDeck)
         {
             GameManager.Instance.RemoveCardToDeck(card);
-            GameManager.Instance.InventryCards.Add(card);
+            GameManager.Instance.AddCardToInventry(card);
             card.gameObject.transform.SetParent(_inventryPanel.transform);
         }
         else
         {
-            GameManager.Instance.InventryCards.Remove(card);
+            GameManager.Instance.RemoveCardToInventry(card);
             GameManager.Instance.AddCardToDeck(card);
             card.gameObject.transform.SetParent(_deckPanel.transform);
         }
