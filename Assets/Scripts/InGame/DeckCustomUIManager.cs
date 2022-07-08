@@ -14,13 +14,15 @@ public class DeckCustomUIManager : MonoBehaviour
     /// </summary>
     public void SetUpUIObject()
     {
-        _canvas = GameObject.FindObjectOfType<Canvas>();
+        _canvas = FindObjectOfType<Canvas>();
         if (!_canvas)
         {
-            _canvas = Resources.Load<Canvas>("UIPrefabs/Canvas");
+            _canvas = Instantiate(Resources.Load<Canvas>("UIPrefabs/Canvas")); ;
         }
         _deckPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Decks"), _canvas.transform);
         _inventryPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Inventry"), _canvas.transform); ;
+
+        Instantiate(Resources.Load<GameObject>("UIPrefabs/ButtonCanvas"));
 
         for (int i = 0; i < 20; i++)
         {
@@ -31,6 +33,7 @@ public class DeckCustomUIManager : MonoBehaviour
     void CreateDeckCard(int id)
     {
         var go = Resources.Load<GameObject>($"CardPrefab/Card{id}");
+
         var card = Instantiate(go, _deckPanel.transform);
         GameManager.Instance.AddCardToDeck(card.GetComponent<InventryCard>());
     }
@@ -39,21 +42,22 @@ public class DeckCustomUIManager : MonoBehaviour
     /// カードをデッキ若しくはインベントリにセットする関数
     /// </summary>
     /// <param name="card">セットするカード</param>
-    /// <param name="isDeck">どちらにセットするか</param>
+    /// <param name="isDeck">現在の状態</param>
     public void SetCard(InventryCard card, bool isDeck)
     {
         if (isDeck)
         {
             GameManager.Instance.RemoveCardToDeck(card);
             GameManager.Instance.InventryCards.Add(card);
-            card.gameObject.transform.SetParent(_deckPanel.transform);
+            card.gameObject.transform.SetParent(_inventryPanel.transform);
         }
         else
         {
             GameManager.Instance.InventryCards.Remove(card);
             GameManager.Instance.AddCardToDeck(card);
-            card.gameObject.transform.SetParent(_inventryPanel.transform);
+            card.gameObject.transform.SetParent(_deckPanel.transform);
         }
+        card.SetIsDeck(!isDeck);
 
     }
 }

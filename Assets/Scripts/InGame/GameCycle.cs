@@ -20,7 +20,7 @@ public class GameCycle : MonoBehaviour
         _gameState.AddTransition<BattleScene, HomeScene>(GameStateEvent.GoHome);
 
         _gameState.StartSetUp<HomeScene>();
-
+        GameManager.Instance.GameCycle = this;
         DontDestroyOnLoad(gameObject);
     }
 

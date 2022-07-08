@@ -5,9 +5,9 @@ using UnityEngine;
 /// </summary>
 public class HomeManager : Singleton<HomeManager>
 {
-    DeckCustomManager _deckCustomUIManager = null;
+    DeckCustomUIManager _deckCustomUIManager = null;
 
-    public DeckCustomManager DeckCustomUIManager
+    public DeckCustomUIManager DeckCustomUIManager
     {
         get
         {
@@ -15,7 +15,7 @@ public class HomeManager : Singleton<HomeManager>
             {
                 GameObject go = new GameObject();
                 go.name = "DeckCustomUIManager";
-                var deckCustom = go.AddComponent<DeckCustomManager>();
+                var deckCustom = go.AddComponent<DeckCustomUIManager>();
                 _deckCustomUIManager = deckCustom;
             }
             return _deckCustomUIManager;

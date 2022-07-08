@@ -44,7 +44,7 @@ public class GameManager : Singleton<GameManager>
             if (!_gameCycle)
             {
                 GameObject go = new GameObject();
-                go.name = "DeckCustomUIManager";
+                go.name = "GameCycle";
                 var deckCustom = go.AddComponent<GameCycle>();
                 _gameCycle = deckCustom;
             }
