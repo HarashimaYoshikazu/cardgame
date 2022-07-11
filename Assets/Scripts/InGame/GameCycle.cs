@@ -90,7 +90,6 @@ public class GameCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
-            Debug.Log("a");
             BattleManager.Instance.BattleUIManagerInstance.SetUpUI();
         }
 

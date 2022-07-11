@@ -9,6 +9,7 @@ public class DeckCustomUIManager : MonoBehaviour
     GameObject _inventryPanel = null;
     GameObject _deckPanel = null;
 
+    //生成だけしてAwakeでやる方が賢いかも
     /// <summary>
     /// UIオブジェクトを動的に生成する関数
     /// </summary>
