@@ -22,7 +22,7 @@ public class TurnCycle : MonoBehaviour
         _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
         _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd, IsDeath);
 
-        _stateMachine.AddAnyTransition<EndState>(EventEnum.Result);
+        _stateMachine.AddAnyTransitionTo<EndState>(EventEnum.Result);
 
         _stateMachine.StartSetUp<StartState>();
     }

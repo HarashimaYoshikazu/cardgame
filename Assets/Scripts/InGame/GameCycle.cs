@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameCycle : MonoBehaviour
 {
@@ -15,23 +16,56 @@ public class GameCycle : MonoBehaviour
     StateMachine<GameStateEvent> _gameState = new StateMachine<GameStateEvent>();
     private void Awake()
     {
+        //èâä˙âªëJà⁄
+        _gameState.AddTransition<Empty, HomeScene>(GameStateEvent.GoHome);
+        _gameState.AddTransition<Empty, BattleScene>(GameStateEvent.GoBattle);
+
+        //ÉQÅ[ÉÄì‡ëJà⁄
         _gameState.AddTransition<TitleScene, HomeScene>(GameStateEvent.GoHome);
         _gameState.AddTransition<HomeScene, BattleScene>(GameStateEvent.GoBattle);
         _gameState.AddTransition<BattleScene, HomeScene>(GameStateEvent.GoHome);
 
-        _gameState.StartSetUp<HomeScene>();
+        _gameState.StartSetUp<Empty>();
         GameManager.Instance.GameCycle = this;
         DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneChange;
+    }
+
+    //FIXMEÅ@ifÇ≈ìùçáÇ≈Ç´ÇÈ
+    void OnSceneChange(Scene nextScene, LoadSceneMode mode)
+    {
+        switch (_gameState.CurrentState)
+        {
+            case Empty:
+                if (SceneManager.GetActiveScene().name =="Home")
+                {
+                    _gameState.Dispatch(GameStateEvent.GoHome);
+                }
+                else if (SceneManager.GetActiveScene().name == "Battle")
+                {
+                    _gameState.Dispatch(GameStateEvent.GoBattle);
+                }
+                break;
+            case HomeScene:
+                _gameState.Dispatch(GameStateEvent.GoBattle);
+                break;
+
+            case BattleScene:
+                _gameState.Dispatch(GameStateEvent.GoHome);
+                break;
+        }
+
     }
 
     public void GoBattle()
     {
-        _gameState.Dispatch(GameStateEvent.GoBattle);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Battle");
     }
 
     public void GoHome()
     {
-        _gameState.Dispatch(GameStateEvent.GoHome);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
     }
 
     class TitleScene : StateMachine<GameStateEvent>.State
@@ -48,7 +82,7 @@ public class GameCycle : MonoBehaviour
 
         protected override void OnExit(StateMachine<GameStateEvent>.State nextState)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Battle");
+            
         }
     }
 
@@ -62,7 +96,11 @@ public class GameCycle : MonoBehaviour
 
         protected override void OnExit(StateMachine<GameStateEvent>.State nextState)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+            
         }
+    }
+    class Empty : StateMachine<GameStateEvent>.State
+    {
+
     }
 }

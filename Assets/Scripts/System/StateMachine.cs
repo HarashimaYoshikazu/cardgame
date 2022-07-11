@@ -117,7 +117,7 @@ public class StateMachine<Event> where Event : System.Enum
     }
 
 
-    public void AddAnyTransition<TTo>(Event eventId) where TTo : State, new()
+    public void AddAnyTransitionTo<TTo>(Event eventId) where TTo : State, new()
     {
         AddTransition<AnyState, TTo>(eventId, () => true);
     }
