@@ -54,6 +54,12 @@ public class GameCycle : MonoBehaviour
 
     class BattleScene : StateMachine<GameStateEvent>.State
     {
+        public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
+        {
+            Debug.Log("a");
+            BattleManager.Instance.BattleUIManagerInstance.SetUpUI();
+        }
+
         protected override void OnExit(StateMachine<GameStateEvent>.State nextState)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Home");

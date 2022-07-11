@@ -20,4 +20,20 @@ public class BattleManager : Singleton<BattleManager>
         }
         set { _turnCycleInstance = value; }
     }
+
+    BattleUIManager _battleUIManager = null;
+    public BattleUIManager BattleUIManagerInstance
+    {
+        get
+        {
+            if (!_battleUIManager)
+            {
+                var go = new GameObject();
+                go.name = "BattleUIManager";
+                _battleUIManager= go.AddComponent<BattleUIManager>();
+            }
+            return _battleUIManager;
+        }
+        set { _battleUIManager = value; }
+    }
 }
