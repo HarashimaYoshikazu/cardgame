@@ -39,7 +39,7 @@ public class DeckCustomUIManager : MonoBehaviour
     /// <param name="id">í«â¡ÇµÇΩÇ¢ÉJÅ[ÉhÇÃID</param>
     void CreateDeckCard(int id)
     {
-        var goPrefab = Resources.Load<GameObject>($"CardPrefab/Card{id}");
+        var goPrefab = Resources.Load<GameObject>($"CardPrefab/Home/Card{id}");
 
         var go = Instantiate(goPrefab, _deckPanel.transform);
         var card = go.GetComponent<InventryCard>();

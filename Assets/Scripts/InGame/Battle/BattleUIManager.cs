@@ -77,4 +77,9 @@ public class BattleUIManager : MonoBehaviour
             Instantiate(i, canvas.transform);
         }
     }
+
+    void CreateHands()
+    {
+
+    }
 }

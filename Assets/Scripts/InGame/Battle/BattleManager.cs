@@ -4,6 +4,31 @@ using UnityEngine;
 
 public class BattleManager : Singleton<BattleManager>
 {
+    public int FirstHands => BattleManagerAttachment.FirstHands;
+    public int HandsLimit => BattleManagerAttachment.HandsLimit;
+
+    BattleManagerAttachment _battleManagerAttachment = null;
+    public BattleManagerAttachment BattleManagerAttachment
+    {
+        get 
+        {
+            if (!_battleManagerAttachment)
+            {
+                var bm = GameObject.FindObjectOfType<BattleManagerAttachment>();
+                if (!bm)
+                {
+                    throw new System.ArgumentNullException();
+                }
+                else
+                {
+                    _battleManagerAttachment = bm;
+                }               
+            }
+            return _battleManagerAttachment;
+        }
+        set { _battleManagerAttachment = value; }
+    }
+
     TurnCycle _turnCycleInstance = null;
     public TurnCycle TurnCycleInstance
     {
