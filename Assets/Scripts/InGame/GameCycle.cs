@@ -90,7 +90,7 @@ public class GameCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
-            BattleManager.Instance.BattleUIManagerInstance.SetUpUI();
+            BattleManager.Instance.SetUpCards();
         }
 
         protected override void OnExit(StateMachine<GameStateEvent>.State nextState)

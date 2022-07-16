@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class BattleUIManager : MonoBehaviour
 {
+    List<BattleCard> _handsObjectList = new List<BattleCard>();
+
     [SerializeField]
     GameObject _opponentDeck = null;
     public GameObject OpponentDeck => _opponentDeck;
@@ -32,54 +34,49 @@ public class BattleUIManager : MonoBehaviour
 
     public void SetUpUI()
     {
-        List<GameObject> list = new List<GameObject>();
+        GameObject canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas"));
         if (!_opponentDeck)
         {
-            list.Add(_opponentDeck = Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"));
+            _opponentDeck =Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"),canvas.transform)  ;
+
         }
         if (!_opponentField)
         {
-            list.Add(_opponentField = Resources.Load<GameObject>("UIPrefabs/Battle/opponentField")) ;
+            _opponentField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentField"), canvas.transform);
         }
         if (!_opponentHands)
         {
-             list.Add(_opponentHands = Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"));
+            _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), canvas.transform);
         }
         if (!_opponentPlayerView)
         {
-             list.Add(_opponentPlayerView = Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"));
+            _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), canvas.transform);
         }
 
         if (!_ownDeck)
         {
-             list.Add(_ownDeck = Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"));
+            _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), canvas.transform);
         }
         if (!_ownField)
         {
-             list.Add(_ownField = Resources.Load<GameObject>("UIPrefabs/Battle/ownField"));
+            _ownField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownField"), canvas.transform);
         }
         if (!_ownHands)
         {
-             list.Add(_ownHands = Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"));
+            _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), canvas.transform);
         }
         if (!_ownPlayerView)
         {
-             list.Add(_ownPlayerView = Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"));
-        }
-
-       GameObject canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas")) ;
-        if (list.Count ==0)
-        {
-            return;
-        }
-        foreach (var i in list)
-        {
-            Instantiate(i, canvas.transform);
+            _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), canvas.transform);
         }
     }
 
-    void CreateHands()
+    public void CreateHandsObject(int cardID)
     {
+        var goPrefab = Resources.Load<GameObject>($"CardPrefab/Battle/Card{cardID}");
+        var go = Instantiate(goPrefab, _ownHands.transform);
 
+        var card = go.GetComponent<BattleCard>();
+        _handsObjectList.Add(card);
     }
 }

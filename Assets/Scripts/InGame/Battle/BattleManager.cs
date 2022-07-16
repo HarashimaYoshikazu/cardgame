@@ -4,13 +4,24 @@ using UnityEngine;
 
 public class BattleManager : Singleton<BattleManager>
 {
+    /// <summary>ŽRŽD</summary>
+    List<int> _deck = new List<int>();
+    public void AddDeck(int cardID) { _deck.Add(cardID); }
+    public void RemoveDeck(int cardID) { _deck.RemoveAt(cardID); }
+
+    /// <summary>ŽèŽD</summary>
+    List<int> _hands = new List<int>();
+    public void AddHands(int cardID) { _hands.Add(cardID); }
+    public void RemoveHands(int cardID) { _hands.Remove(cardID); }
+
+    //‰Šú‰»Ý’è
     public int FirstHands => BattleManagerAttachment.FirstHands;
     public int HandsLimit => BattleManagerAttachment.HandsLimit;
 
     BattleManagerAttachment _battleManagerAttachment = null;
     public BattleManagerAttachment BattleManagerAttachment
     {
-        get 
+        get
         {
             if (!_battleManagerAttachment)
             {
@@ -22,7 +33,7 @@ public class BattleManager : Singleton<BattleManager>
                 else
                 {
                     _battleManagerAttachment = bm;
-                }               
+                }
             }
             return _battleManagerAttachment;
         }
@@ -55,10 +66,33 @@ public class BattleManager : Singleton<BattleManager>
             {
                 var go = new GameObject();
                 go.name = "BattleUIManager";
-                _battleUIManager= go.AddComponent<BattleUIManager>();
+                _battleUIManager = go.AddComponent<BattleUIManager>();
             }
             return _battleUIManager;
         }
         set { _battleUIManager = value; }
+    }
+
+    public void SetUpCards()
+    {
+        BattleUIManagerInstance.SetUpUI();
+
+        _deck = GameManager.Instance.DeckCards;
+        DistributeHands();
+    }
+
+    void DistributeHands()
+    {
+        if (_hands.Count <= HandsLimit && _deck.Count > 0)
+        {
+            for (int i = 0; i < FirstHands; i++)
+            {
+                int rand = Random.Range(0, _deck.Count);
+                int cardID = _deck[rand];
+                _hands.Add(cardID);
+                _deck.Remove(cardID);
+                _battleUIManager.CreateHandsObject(cardID);
+            }
+        }
     }
 }
