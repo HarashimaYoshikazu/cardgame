@@ -25,18 +25,26 @@ public class DeckCustomUIManager : MonoBehaviour
 
         Instantiate(Resources.Load<GameObject>("UIPrefabs/ButtonCanvas"));
 
+
+        //とりあえず最初に20枚追加
         for (int i = 0; i < 20; i++)
         {
             CreateDeckCard(1);
         }
     }
 
+    /// <summary>
+    /// デッキリストに新しくカードを追加する関数
+    /// </summary>
+    /// <param name="id">追加したいカードのID</param>
     void CreateDeckCard(int id)
     {
-        var go = Resources.Load<GameObject>($"CardPrefab/Card{id}");
+        var goPrefab = Resources.Load<GameObject>($"CardPrefab/Card{id}");
 
-        var card = Instantiate(go, _deckPanel.transform);
-        GameManager.Instance.AddCardToDeck(card.GetComponent<InventryCard>());
+        var go = Instantiate(goPrefab, _deckPanel.transform);
+        var card = go.GetComponent<InventryCard>();
+        card.SetIsDeck(true);
+        GameManager.Instance.AddCardToDeck(card.CardID);
     }
 
     /// <summary>
@@ -48,17 +56,17 @@ public class DeckCustomUIManager : MonoBehaviour
     {
         if (isDeck)
         {
-            GameManager.Instance.RemoveCardToDeck(card);
-            GameManager.Instance.AddCardToInventry(card);
+            GameManager.Instance.RemoveCardToDeck(card.CardID);
+            GameManager.Instance.AddCardToInventry(card.CardID);
             card.gameObject.transform.SetParent(_inventryPanel.transform);
         }
         else
         {
-            GameManager.Instance.RemoveCardToInventry(card);
-            GameManager.Instance.AddCardToDeck(card);
+            GameManager.Instance.RemoveCardToInventry(card.CardID);
+            GameManager.Instance.AddCardToDeck(card.CardID);
             card.gameObject.transform.SetParent(_deckPanel.transform);
         }
-        card.SetIsDeck(!isDeck);
+        //card.SetIsDeck(!isDeck);
 
     }
 }

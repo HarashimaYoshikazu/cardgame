@@ -6,54 +6,53 @@ using UnityEngine;
 /// </summary>
 public class GameManager : Singleton<GameManager>
 {
-    List<InventryCard> _inventryCards = new List<InventryCard>();
+    List<int> _inventryCards = new List<int>();
 
     /// <summary>インベントリのカードリスト</summary>
-    List<InventryCard> InventryCards => _inventryCards;
+    List<int> InventryCards => _inventryCards;
 
     /// <summary>デッキのカードリスト</summary>
-    List<InventryCard> _decksCards = new List<InventryCard>();
+    List<int> _decksCards = new List<int>();
 
     int _cardLimit = 20;
 
     /// <summary>
     /// デッキのリストにカードを追加する関数
     /// </summary>
-    /// <param name="card">追加したいカードクラス</param>
-    public void AddCardToDeck(InventryCard card)
+    /// <param name="cardID">追加したいカードクラス</param>
+    public void AddCardToDeck(int cardID)
     {
         if (_decksCards.Count < _cardLimit)
         {
-            card.SetIsDeck(true);
-            _decksCards.Add(card);
+            _decksCards.Add(cardID);
         }
     }
 
     /// <summary>
     /// デッキのリストからカードを削除する関数
     /// </summary>
-    /// <param name="card">削除したいカードクラス</param>
-    public void RemoveCardToDeck(InventryCard card)
+    /// <param name="cardID">削除したいカードクラス</param>
+    public void RemoveCardToDeck(int cardID)
     {
-        _decksCards.Remove(card);
+        _decksCards.Remove(cardID);
     }
 
     /// <summary>
     /// インベントリのリストにカードを追加する関数
     /// </summary>
-    /// <param name="card">追加したいカードクラス</param>
-    public void AddCardToInventry(InventryCard card)
+    /// <param name="cardID">追加したいカードクラス</param>
+    public void AddCardToInventry(int cardID)
     {
-        _inventryCards.Add(card);
+        _inventryCards.Add(cardID);
     }
 
     /// <summary>
     /// インベントリのリストからカードを削除する関数
     /// </summary>
-    /// <param name="card">削除したいカードクラス</param>
-    public void RemoveCardToInventry(InventryCard card)
+    /// <param name="cardID">削除したいカードクラス</param>
+    public void RemoveCardToInventry(int cardID)
     {
-        _inventryCards.Remove(card);
+        _inventryCards.Remove(cardID);
     }
 
     GameCycle _gameCycle = null;

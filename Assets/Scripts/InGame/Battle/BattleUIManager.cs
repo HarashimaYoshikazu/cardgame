@@ -76,6 +76,5 @@ public class BattleUIManager : MonoBehaviour
         {
             Instantiate(i, canvas.transform);
         }
-        Debug.Log(SceneManager.GetActiveScene().name);
     }
 }
