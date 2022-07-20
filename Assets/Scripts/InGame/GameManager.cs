@@ -59,18 +59,7 @@ public class GameManager : Singleton<GameManager>
     GameCycle _gameCycle = null;
     public GameCycle GameCycle
     {
-        get
-        {
-            if (!_gameCycle)
-            {
-                GameObject go = new GameObject();
-                go.name = "GameCycle";
-                var deckCustom = go.AddComponent<GameCycle>();
-                _gameCycle = deckCustom;
-            }
-            return _gameCycle;
-        }
+        get { return _gameCycle; }
         set { _gameCycle = value; }
     }
-
 }

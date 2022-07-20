@@ -12,7 +12,7 @@ public class Singleton<SingletonT>where SingletonT : Singleton<SingletonT>, new(
     {
         get
         {
-            return GetOrCreateInstance<SingletonT>();
+            return GetOrCreateInstance<SingletonT>();   
         }
     }
 

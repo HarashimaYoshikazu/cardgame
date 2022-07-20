@@ -16,6 +16,13 @@ public class GameCycle : MonoBehaviour
     StateMachine<GameStateEvent> _gameState = new StateMachine<GameStateEvent>();
     private void Awake()
     {
+        if (GameManager.Instance.GameCycle)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        GameManager.Instance.GameCycle = this;
+
         //初期化遷移
         _gameState.AddTransition<Empty, HomeScene>(GameStateEvent.GoHome);
         _gameState.AddTransition<Empty, BattleScene>(GameStateEvent.GoBattle);
@@ -26,7 +33,7 @@ public class GameCycle : MonoBehaviour
         _gameState.AddTransition<BattleScene, HomeScene>(GameStateEvent.GoHome);
 
         _gameState.StartSetUp<Empty>();
-        GameManager.Instance.GameCycle = this;
+        
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneChange;
@@ -77,6 +84,7 @@ public class GameCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
+            Debug.Log($"HomeState。現在のシーン{SceneManager.GetActiveScene().name}");
             HomeManager.Instance.DeckCustomUIManager.SetUpUIObject();
         }
 
@@ -90,6 +98,8 @@ public class GameCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
+            Debug.Log($"バトルState。現在のシーン{SceneManager.GetActiveScene().name}");
+            
             BattleManager.Instance.SetUpCards();
         }
 
