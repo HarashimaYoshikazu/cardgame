@@ -32,6 +32,9 @@ public class BattleUIManager : MonoBehaviour
     GameObject _ownPlayerView = null;
     public GameObject OwnPlayerView => _ownPlayerView;
 
+    GameObject _currentDrugParent = null;
+    public GameObject CurrentDrugParent => _currentDrugParent;
+
     public void SetUpUI()
     {
         GameObject canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas"));
@@ -68,6 +71,10 @@ public class BattleUIManager : MonoBehaviour
         if (!_ownPlayerView)
         {
             _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), canvas.transform);
+        }
+        if (!_currentDrugParent)
+        {
+            _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"),canvas.transform);
         }
     }
 

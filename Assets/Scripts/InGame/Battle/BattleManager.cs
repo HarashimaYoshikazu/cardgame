@@ -83,6 +83,15 @@ public class BattleManager : Singleton<BattleManager>
 
     void DistributeHands()
     {
+        //デバッグ
+        if (_deck.Count ==0)
+        {
+            for (int i = 0;i<GameManager.Instance.CardLimit;i++)
+            {
+                GameManager.Instance.AddCardToDeck(1);
+            }            
+        }
+
         if (_hands.Count <= HandsLimit && _deck.Count > 0)
         {
             for (int i = 0; i < FirstHands; i++)

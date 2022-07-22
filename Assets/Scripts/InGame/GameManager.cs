@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     public List<int> DeckCards => _decksCards;
 
     int _cardLimit = 20;
+    public int CardLimit => _cardLimit;
 
     /// <summary>
     /// デッキのリストにカードを追加する関数
