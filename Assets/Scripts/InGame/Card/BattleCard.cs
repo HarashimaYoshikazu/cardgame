@@ -25,6 +25,7 @@ public class BattleCard : MonoBehaviour,IDragHandler,IPointerUpHandler,IBeginDra
 
     BattleCardState _currentState = BattleCardState.Hands;
 
+    GameObject _currentPointerObject = null;
     Transform _handsObject = null;
 
     private void Start()
@@ -59,26 +60,29 @@ public class BattleCard : MonoBehaviour,IDragHandler,IPointerUpHandler,IBeginDra
 
     public void OnDrag(PointerEventData eventData)
     {
-        var go = eventData.pointerCurrentRaycast.gameObject;
+        _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
+        Debug.Log(_currentPointerObject.name);
         _rectTransform.position = eventData.position;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        var go = eventData.pointerCurrentRaycast.gameObject;
-        if (go.CompareTag("OwnField"))
+        if (_currentPointerObject.CompareTag("OwnField"))
         {
-            this.transform.SetParent(go.transform);
+            this.transform.SetParent(_currentPointerObject.transform);
         }
         else
         {
+            _image.raycastTarget = true;
             this.transform.SetParent(_handsObject);
         }
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        this.transform.SetAsLastSibling();         //â€ëË2Å|2
+        _image.raycastTarget = false;
+        this.transform.SetAsLastSibling();
         this.transform.parent = BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform;
     }
 }

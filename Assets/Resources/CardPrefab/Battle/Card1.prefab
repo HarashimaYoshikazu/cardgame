@@ -137,3 +137,4 @@ MonoBehaviour:
   cardID: 1
   _image: {fileID: 0}
   _button: {fileID: 0}
+  _rectTransform: {fileID: 0}
