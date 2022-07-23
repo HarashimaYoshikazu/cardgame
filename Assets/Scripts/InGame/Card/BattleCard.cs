@@ -6,32 +6,60 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
-public class BattleCard : MonoBehaviour,IDragHandler,IPointerUpHandler,IBeginDragHandler
+public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler
 {
-    [SerializeField]
+    [SerializeField, Tooltip("カードの固有番号")]
     int cardID;
+    /// <summary>カードの固有番号</summary>
     public int CardID => cardID;
 
-    [SerializeField]
+    /// <summary>カードのImageクラス</summary>
     Image _image;
 
-    [SerializeField]
+    /// <summary>カードのButtonクラス</summary>
     Button _button;
 
-    [SerializeField]
+    /// <summary>カードのRectTransformクラス</summary>
     RectTransform _rectTransform;
 
+    /// <summary>カードの情報を格納したクラスのインスタンス</summary>
     CardData _cardData;
 
     BattleCardState _currentState = BattleCardState.Hands;
+    public void SetCurrentCardState(BattleCardState battleCardState)
+    {
+        switch (battleCardState)
+        {
+            case BattleCardState.Hands:
+                break;
+            case BattleCardState.FIeld:
+                break;
+        }
 
+        _currentState = battleCardState;
+    }
+
+    /// <summary>キャッシュ用の変数</summary>
     GameObject _currentPointerObject = null;
-    Transform _handsObject = null;
 
-    private void Start()
+    private void Awake()
     {
         Init();
+        _button.onClick.AddListener(() =>
+        {
 
+        });
+
+    }
+    /// <summary>
+    /// カードの初期化関数
+    /// </summary>
+    void Init()
+    {
+        //カードデータをIDに基づいて生成
+        _cardData = new CardData(cardID);
+
+        //コンポーネントのキャッシュ
         if (!_image)
         {
             _image = GetComponent<Image>();
@@ -42,48 +70,60 @@ public class BattleCard : MonoBehaviour,IDragHandler,IPointerUpHandler,IBeginDra
         {
             _button = GetComponent<Button>();
         }
-        _button.onClick.AddListener(() =>
-        {
 
-        });
-        
-    }
-    void Init()
-    {
-        _cardData = new CardData(cardID);
         if (!_rectTransform)
         {
             _rectTransform = GetComponent<RectTransform>();
         }
-        _handsObject = BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform;
+        _currentPointerObject = BattleManager.Instance.BattleUIManagerInstance.CurrentPointerObject;
+    }
+
+    /*
+    以下EventSystemsのインターフェイスの関数
+    */
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!BattleManager.Instance.IsMyTurn)
+        {
+            return;
+        }
+        //カードの下のObjectを取得したいからraycastTargetを無効にする
+        _image.raycastTarget = false;
+        //ドラッグしてるとき用のオブジェクトの子オブジェクトにする
+        this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!BattleManager.Instance.IsMyTurn)
+        {
+            return;
+        }
+        //現在ポインター上にあるオブジェクトを検知して代入
         _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
         Debug.Log(_currentPointerObject.name);
+        //ドラッグ中はポインターに追従
         _rectTransform.position = eventData.position;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_currentPointerObject.CompareTag("OwnField"))
+        if (!BattleManager.Instance.IsMyTurn)
+        {
+            return;
+        }
+        //自分のフィールドオブジェクトだったら子オブジェクトにする
+        if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField)
         {
             this.transform.SetParent(_currentPointerObject.transform);
         }
+        //違ったらraycastTargetを有効にして手札に戻す
         else
         {
             _image.raycastTarget = true;
-            this.transform.SetParent(_handsObject);
+            this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform);
         }
-        
-    }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        _image.raycastTarget = false;
-        this.transform.SetAsLastSibling();
-        this.transform.parent = BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform;
     }
 }
 
@@ -91,5 +131,4 @@ public enum BattleCardState
 {
     Hands,
     FIeld,
-    Trash
 }

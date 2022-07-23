@@ -11,4 +11,8 @@ public class BattleManagerAttachment : MonoBehaviour
     [SerializeField]
     int _handsLimit = 10;
     public int HandsLimit => _handsLimit;
+
+    [SerializeField]
+    bool _isFirstTurn = true;
+    public bool IsFirstTurn => _isFirstTurn;
 }

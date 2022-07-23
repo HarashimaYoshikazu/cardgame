@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// ターンの遷移を制御するクラス
 /// </summary>
 public class TurnCycle : MonoBehaviour
 {
-    enum EventEnum 
+    public enum EventEnum 
     {
         GameStart,
         MyTurnEnd,
@@ -18,13 +19,20 @@ public class TurnCycle : MonoBehaviour
     {
         _stateMachine = new StateMachine<EventEnum>();
 
-        _stateMachine.AddTransition<StartState, MyTurn>(EventEnum.GameStart,IsDeath);
         _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
         _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd, IsDeath);
 
         _stateMachine.AddAnyTransitionTo<EndState>(EventEnum.Result);
 
-        _stateMachine.StartSetUp<StartState>();
+        if (BattleManager.Instance.IsFirstTurn)
+        {
+            _stateMachine.StartSetUp<MyTurn>();
+        }
+        else
+        {
+            _stateMachine.StartSetUp<OpponentTurn>();
+        }
+        
     }
 
     int hp = 0;
@@ -37,29 +45,25 @@ public class TurnCycle : MonoBehaviour
         return false;
     }
 
-    class StartState : StateMachine<EventEnum>.State
+    class MyTurn :StateMachine<EventEnum>.State
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            
+            BattleManager.Instance.IsMyTurn = true;
         }
-    }
-
-    class MyTurn :StateMachine<EventEnum>.State
-    {
-
     }
 
     class OpponentTurn : StateMachine<EventEnum>.State
     {
-
+        public override void OnEnter(StateMachine<EventEnum>.State prevState)
+        {
+            BattleManager.Instance.IsMyTurn = false;
+        }
     }
 
     class EndState : StateMachine<EventEnum>.State
     {
 
     }
-
-
 }
 

@@ -2,9 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// UI上のオブジェクトを生成、管理するクラス
+/// </summary>
 public class BattleUIManager : MonoBehaviour
 {
-    List<BattleCard> _handsObjectList = new List<BattleCard>();
+    List<BattleCard> _cardObjectList = new List<BattleCard>();
+    public List<BattleCard> CardObjects => _cardObjectList;
+
+    GameObject _canvas = null;
+    public GameObject Canvas => _canvas;
 
     [SerializeField]
     GameObject _opponentDeck = null;
@@ -34,56 +41,70 @@ public class BattleUIManager : MonoBehaviour
 
     GameObject _currentDrugParent = null;
     public GameObject CurrentDrugParent => _currentDrugParent;
+   
+    GameObject _currentPointerObject = null;
+    /// <summary>現在ポインター上にあるオブジェクト</summary>
+    public GameObject CurrentPointerObject
+    {
+        get => _currentPointerObject;
+        set => _currentPointerObject = value;
+    }
 
+    /// <summary>
+    /// Battleシーンで使うUIオブジェクトを生成
+    /// </summary>
     public void SetUpUI()
     {
-        GameObject canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas"));
+        _canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas"));
         if (!_opponentDeck)
         {
-            _opponentDeck =Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"),canvas.transform)  ;
+            _opponentDeck =Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"),_canvas.transform)  ;
 
         }
         if (!_opponentField)
         {
-            _opponentField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentField"), canvas.transform);
+            _opponentField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentField"), _canvas.transform);
         }
         if (!_opponentHands)
         {
-            _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), canvas.transform);
+            _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), _canvas.transform);
         }
         if (!_opponentPlayerView)
         {
-            _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), canvas.transform);
+            _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
         }
 
         if (!_ownDeck)
         {
-            _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), canvas.transform);
+            _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), _canvas.transform);
         }
         if (!_ownField)
         {
-            _ownField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownField"), canvas.transform);
+            _ownField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownField"), _canvas.transform);
         }
         if (!_ownHands)
         {
-            _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), canvas.transform);
+            _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), _canvas.transform);
         }
         if (!_ownPlayerView)
         {
-            _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), canvas.transform);
+            _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
         }
         if (!_currentDrugParent)
         {
-            _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"),canvas.transform);
+            _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"),_canvas.transform);
+            _currentDrugParent.transform.parent.SetAsLastSibling();
         }
     }
 
+    /// <summary>
+    /// IDに応じたカードをUI上に生成する
+    /// </summary>
+    /// <param name="cardID"></param>
     public void CreateHandsObject(int cardID)
     {
-        var goPrefab = Resources.Load<GameObject>($"CardPrefab/Battle/Card{cardID}");
-        var go = Instantiate(goPrefab, _ownHands.transform);
-
-        var card = go.GetComponent<BattleCard>();
-        _handsObjectList.Add(card);
+        var battleCardPrefab = Resources.Load<GameObject>($"CardPrefab/Battle/Card{cardID}");
+        var battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
+        _cardObjectList.Add(battleCard.GetComponent<BattleCard>());
     }
 }

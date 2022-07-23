@@ -73,25 +73,35 @@ public class BattleManager : Singleton<BattleManager>
         set { _battleUIManager = value; }
     }
 
+    public bool IsFirstTurn { get { return BattleManagerAttachment.IsFirstTurn; } }
+
+    bool _isMyTurn = false;
+    /// <summary>現在のターンが自分かどうか</summary>
+    public bool IsMyTurn
+    {
+        get { return _isMyTurn; }
+        set { _isMyTurn = value; }
+    }
+
+
     public void SetUpCards()
     {
         BattleUIManagerInstance.SetUpUI();
 
         _deck = GameManager.Instance.DeckCards;
+        //デバッグ
+        if (_deck.Count == 0)
+        {
+            for (int i = 0; i < GameManager.Instance.CardLimit; i++)
+            {
+                GameManager.Instance.AddCardToDeck(1);
+            }
+        }
         DistributeHands();
     }
 
     void DistributeHands()
     {
-        //デバッグ
-        if (_deck.Count ==0)
-        {
-            for (int i = 0;i<GameManager.Instance.CardLimit;i++)
-            {
-                GameManager.Instance.AddCardToDeck(1);
-            }            
-        }
-
         if (_hands.Count <= HandsLimit && _deck.Count > 0)
         {
             for (int i = 0; i < FirstHands; i++)
