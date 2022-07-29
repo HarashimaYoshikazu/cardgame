@@ -44,7 +44,7 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            BattleManager.Instance.IsMyTurn = true;
+            BattleManager.Instance.TurnStart(BattleManager.Instance.Player);
         }
     }
 

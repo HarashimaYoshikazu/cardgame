@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class BattleManager : Singleton<BattleManager>
 {
+    Unit _player = new Unit(20,10);
+    /// <summary>プレイヤーの情報クラス</summary>
+    public Unit Player => _player;
+    Unit _enemy = new Unit(20,10);
+    /// <summary>敵の情報クラス</summary>
+    public Unit Enemy => _enemy;
+
     /// <summary>山札</summary>
     List<int> _deck = new List<int>();
     public void AddDeck(int cardID) { _deck.Add(cardID); }
@@ -113,5 +120,19 @@ public class BattleManager : Singleton<BattleManager>
                 _battleUIManager.CreateHandsObject(cardID);
             }
         }
+    }
+
+    const int _addMana = 1;
+    public void TurnStart(Unit unit)
+    {
+        if (unit == null)
+        {
+            throw new System.ArgumentNullException();
+        }
+        else
+        {
+            unit.ChangeMana(_addMana);
+        }
+        _isMyTurn = true;    
     }
 }
