@@ -393,7 +393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _firstHands: 4
   _handsLimit: 10
-  _isFirstTurn: 0
+  _isFirstTurn: 1
 --- !u!4 &1938980379
 Transform:
   m_ObjectHideFlags: 0

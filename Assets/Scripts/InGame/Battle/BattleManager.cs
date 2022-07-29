@@ -1,15 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class BattleManager : Singleton<BattleManager>
 {
-    Unit _player = new Unit(20,10);
+
+    Unit _player = null;
     /// <summary>プレイヤーの情報クラス</summary>
-    public Unit Player => _player;
-    Unit _enemy = new Unit(20,10);
+    public Unit Player
+    {
+        get
+        {
+            //if(_player == null)
+            //{
+            //    _player = new Unit(20,10,BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText);
+            //}
+            return _player;
+        }
+    }
+    Unit _enemy = null;
     /// <summary>敵の情報クラス</summary>
-    public Unit Enemy => _enemy;
+    public Unit Enemy
+    {
+        get
+        {
+            //if (_enemy == null)
+            //{
+            //    _enemy = new Unit(20,10,BattleUIManagerInstance.OwnHPText,BattleUIManagerInstance.OwnManaText);
+            //}
+            return _enemy;
+        }
+    }
 
     /// <summary>山札</summary>
     List<int> _deck = new List<int>();
@@ -90,11 +112,15 @@ public class BattleManager : Singleton<BattleManager>
         set { _isMyTurn = value; }
     }
 
-
-    public void SetUpCards()
+    public void Init()
     {
-        BattleUIManagerInstance.SetUpUI();
+        _player  = new Unit(20, 10, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText);
+        _enemy = new Unit(20, 10, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentManaText);
+        SetUpCards();
+    }
 
+    void SetUpCards()
+    {
         _deck = GameManager.Instance.DeckCards;
         //デバッグ
         if (_deck.Count == 0)
@@ -122,17 +148,16 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    //ソロプレイ想定
     const int _addMana = 1;
-    public void TurnStart(Unit unit)
+    public void PlayerTurnStart()
     {
-        if (unit == null)
-        {
-            throw new System.ArgumentNullException();
-        }
-        else
-        {
-            unit.ChangeMana(_addMana);
-        }
+        Player.ChangeMana(_addMana);
         _isMyTurn = true;    
+    }
+    public void EnemyTurnStart()
+    {
+        Enemy.ChangeMana(_addMana);
+        _isMyTurn = false;
     }
 }

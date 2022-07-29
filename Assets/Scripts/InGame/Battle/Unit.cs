@@ -1,27 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UnityEngine.UI;
 
 public class Unit
 {
     //Ç–Ç∆Ç‹Ç∏ÉÅÉìÉoïœêîÇ…ç≈ëÂílÇäiî[ÇµÇƒÇÈ
     int _maxHP = 0;
     public int MaxHP => _maxHP;
-    int _currentHP = 0;
-    public int HP => _currentHP;
+
+    ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
+    public ReactiveProperty<int> CurrentHP => _currentHP;
 
     int _maxMana = 0;
     public int MaxMana => _maxMana;
-    int _mana = 0;
-    public int Mana => _mana;
+    ReactiveProperty<int> _currentMana = new ReactiveProperty<int>();
+    public ReactiveProperty<int> CurrentMana => _currentMana;
 
-    public Unit(int initMaxHP,int initMaxMana)
+    public Unit(int initMaxHP,int initMaxMana,Text hpText,Text manaText)
     {
+        _currentHP.Subscribe(x =>
+        {
+            hpText.text = x.ToString();
+            Debug.Log($"HP{x}");
+        });
+
+        _currentMana.Subscribe(x =>
+        {
+            manaText.text = x.ToString();
+            Debug.Log($"É}Éi{x}");
+        });
+
         _maxHP = initMaxHP;
-        _currentHP = _maxHP;
+        _currentHP.Value =_maxHP;
 
         _maxMana = initMaxMana;
-        _mana = 0;
+        _currentMana.Value = 0;
+
+
     }
 
     /// <summary>
@@ -30,8 +47,8 @@ public class Unit
     /// <param name="value">åªç›ÇÃHPÇ…â¡éZÇ≥ÇÍÇÈílÅB</param>
     public bool ChangeHP(int value)
     {
-        _currentHP = Mathf.Clamp(_currentHP + value,0,_maxHP);
-        if (_currentHP <=0)
+        _currentHP.Value = Mathf.Clamp(_currentHP.Value + value,0,_maxHP);
+        if (_currentHP.Value <=0)
         {
             return true;
         }
@@ -46,6 +63,6 @@ public class Unit
     /// </summary>
     public void ChangeMana(int value)
     {
-        _mana = Mathf.Clamp(_mana +value,0,_maxMana);
+        _currentMana.Value = Mathf.Clamp(_currentMana.Value +value,0,_maxMana);
     }
 }

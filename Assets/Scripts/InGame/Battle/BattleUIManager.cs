@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI上のオブジェクトを生成、管理するクラス
@@ -13,41 +13,59 @@ public class BattleUIManager : MonoBehaviour
     GameObject _canvas = null;
     public GameObject Canvas => _canvas;
 
-    [SerializeField]
-    GameObject _opponentDeck = null;
-    public GameObject OpponentDeck => _opponentDeck;
-    [SerializeField]
-    GameObject _opponentField = null;
-    public GameObject OpponentField => _opponentField;
-    [SerializeField]
-    GameObject _opponentHands = null;
-    public GameObject OpponentHands => _opponentHands;
-    [SerializeField]
-    GameObject _opponentPlayerView = null;
-    public GameObject OpponentPlayerView => _opponentPlayerView;
-
-    [SerializeField]
-    GameObject _ownDeck = null;
-    public GameObject Oendeck => _ownDeck;
-    [SerializeField]
-    GameObject _ownField = null;
-    public GameObject OwnField => _ownField;
-    [SerializeField]
-    GameObject _ownHands = null;
-    public GameObject OwnHands => _ownHands;
-    [SerializeField]
-    GameObject _ownPlayerView = null;
-    public GameObject OwnPlayerView => _ownPlayerView;
-
     GameObject _currentDrugParent = null;
     public GameObject CurrentDrugParent => _currentDrugParent;
-   
+
     GameObject _currentPointerObject = null;
     /// <summary>現在ポインター上にあるオブジェクト</summary>
     public GameObject CurrentPointerObject
     {
         get => _currentPointerObject;
         set => _currentPointerObject = value;
+    }
+    /************
+     相手側
+     ***********/
+
+    GameObject _opponentDeck = null;
+    public GameObject OpponentDeck => _opponentDeck;
+
+    GameObject _opponentField = null;
+    public GameObject OpponentField => _opponentField;
+
+    GameObject _opponentHands = null;
+    public GameObject OpponentHands => _opponentHands;
+
+    GameObject _opponentPlayerView = null;
+    public GameObject OpponentPlayerView => _opponentPlayerView;
+    Text _opponentHPText = null;
+    public Text OpponentHPText => _opponentHPText;
+    Text _opponentManaText = null;
+    public Text OpponentManaText => _opponentManaText;
+
+    /************
+     自分側
+      ***********/
+
+    GameObject _ownDeck = null;
+    public GameObject Oendeck => _ownDeck;
+
+    GameObject _ownField = null;
+    public GameObject OwnField => _ownField;
+
+    GameObject _ownHands = null;
+    public GameObject OwnHands => _ownHands;
+  
+    GameObject _ownPlayerView = null;
+    public GameObject OwnPlayerView => _ownPlayerView;
+    Text _ownHPText = null;
+    public Text OwnHPText => _ownHPText;
+    Text _ownManaText = null;
+    public Text OwnManaText => _ownManaText;
+
+    private void Awake()
+    {
+        SetUpUI();
     }
 
     /// <summary>
@@ -72,6 +90,9 @@ public class BattleUIManager : MonoBehaviour
         if (!_opponentPlayerView)
         {
             _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
+            _opponentHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"),_opponentPlayerView.transform);
+            _opponentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
+            Debug.Log(_opponentHPText);
         }
 
         if (!_ownDeck)
@@ -89,6 +110,9 @@ public class BattleUIManager : MonoBehaviour
         if (!_ownPlayerView)
         {
             _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
+            _ownHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+            _ownManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+            Debug.Log(_ownHPText);
         }
         if (!_currentDrugParent)
         {

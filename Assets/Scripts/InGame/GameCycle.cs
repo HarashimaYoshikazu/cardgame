@@ -98,9 +98,7 @@ public class GameCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
-            Debug.Log($"バトルState。現在のシーン{SceneManager.GetActiveScene().name}");
-            
-            BattleManager.Instance.SetUpCards();
+            Debug.Log($"バトルState。現在のシーン{SceneManager.GetActiveScene().name}");            
         }
 
         protected override void OnExit(StateMachine<GameStateEvent>.State nextState)

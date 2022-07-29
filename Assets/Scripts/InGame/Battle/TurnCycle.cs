@@ -17,6 +17,8 @@ public class TurnCycle : MonoBehaviour
 
     void Awake()
     {
+        BattleManager.Instance.Init();
+
         _stateMachine = new StateMachine<EventEnum>();
 
         _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
@@ -44,7 +46,7 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            BattleManager.Instance.TurnStart(BattleManager.Instance.Player);
+            BattleManager.Instance.PlayerTurnStart();
         }
     }
 
@@ -52,7 +54,7 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
-            BattleManager.Instance.IsMyTurn = false;
+            BattleManager.Instance.EnemyTurnStart();
         }
     }
 
