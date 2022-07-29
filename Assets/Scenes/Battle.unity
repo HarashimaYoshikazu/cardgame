@@ -219,7 +219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65704d08581a26f499f210af1e977a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isDebug: 1
 --- !u!4 &1097510741
 Transform:
   m_ObjectHideFlags: 0
@@ -394,6 +393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _firstHands: 4
   _handsLimit: 10
+  _isFirstTurn: 0
 --- !u!4 &1938980379
 Transform:
   m_ObjectHideFlags: 0

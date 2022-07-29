@@ -35,14 +35,9 @@ public class TurnCycle : MonoBehaviour
         
     }
 
-    int hp = 0;
     bool IsDeath()
     {
-        if (hp<1)
-        {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     class MyTurn :StateMachine<EventEnum>.State
