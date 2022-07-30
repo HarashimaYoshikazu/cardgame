@@ -13,29 +13,41 @@ public class Unit
     ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
     public int CurrentHP => _currentHP.Value;
 
-    int _maxMana = 0;
-    public int MaxMana => _maxMana;
+    ReactiveProperty<int> _maxMana = new ReactiveProperty<int>();
+    public int MaxMana => _maxMana.Value;
     ReactiveProperty<int> _currentMana = new ReactiveProperty<int>();
     public int CurrentMana => _currentMana.Value;
 
-    public Unit(int initMaxHP,int initMaxMana,Text hpText,Text manaText)
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    /// <param name="initMaxHP">最大HP</param>
+    /// <param name="currenthpText">現在のHPのView</param>
+    /// <param name="currentmanaText">現在のマナのView</param>
+    /// <param name="maxmanaText">最大マナのView</param>
+    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText)
     {
         _currentHP.Subscribe(x =>
         {
-            hpText.text = x.ToString();
-            Debug.Log($"HP{x}");
+            currenthpText.text = x.ToString();
+            Debug.Log($"現在のHP{x}");
         });
 
         _currentMana.Subscribe(x =>
         {
-            manaText.text = x.ToString();
-            Debug.Log($"マナ{x}");
+            currentmanaText.text = x.ToString();
+            Debug.Log($"現在のマナ{x}");
+        });
+
+        _maxMana.Subscribe(x =>
+        {
+            maxmanaText.text = x.ToString();
         });
 
         _maxHP = initMaxHP;
         _currentHP.Value =_maxHP;
 
-        _maxMana = initMaxMana;
+        _maxMana.Value = 0;
         _currentMana.Value = 0;
 
 
@@ -45,7 +57,7 @@ public class Unit
     /// HPを変化させる関数。戻り値は死亡時はtrue。
     /// </summary>
     /// <param name="value">現在のHPに加算される値。</param>
-    public bool ChangeHP(int value)
+    public bool ChangeCurrentHP(int value)
     {
         _currentHP.Value = Mathf.Clamp(_currentHP.Value + value,0,_maxHP);
         if (_currentHP.Value <=0)
@@ -59,10 +71,20 @@ public class Unit
     }
 
     /// <summary>
-    /// マナを変化させる関数
+    /// 現在のマナを変化させる関数
     /// </summary>
-    public void ChangeMana(int value)
+    public void ChangeCurrentMana(int value)
     {
-        _currentMana.Value = Mathf.Clamp(_currentMana.Value +value,0,_maxMana);
+        _currentMana.Value = Mathf.Clamp(_currentMana.Value +value,0,_maxMana.Value);
+    }
+
+    public void ResetCurrentMana()
+    {
+        _currentMana.Value = _maxMana.Value;
+    }
+
+    public void ChangeMaxMana(int value)
+    {
+        _maxMana.Value += value;
     }
 }

@@ -34,7 +34,15 @@ public class TurnCycle : MonoBehaviour
         {
             _stateMachine.StartSetUp<OpponentTurn>();
         }
-        
+
+        BattleManager.Instance.BattleUIManagerInstance.TurnEndButton.onClick.AddListener(() =>
+        {
+            _stateMachine.Dispatch(EventEnum.MyTurnEnd);
+        });
+        BattleManager.Instance.BattleUIManagerInstance.DebugOpponentTurnEndButton.onClick.AddListener(() =>
+        {
+            _stateMachine.Dispatch(EventEnum.OpponentTurnEnd);
+        });
     }
 
     bool IsDeath()

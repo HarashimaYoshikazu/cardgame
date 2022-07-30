@@ -40,8 +40,10 @@ public class BattleUIManager : MonoBehaviour
     public GameObject OpponentPlayerView => _opponentPlayerView;
     Text _opponentHPText = null;
     public Text OpponentHPText => _opponentHPText;
-    Text _opponentManaText = null;
-    public Text OpponentManaText => _opponentManaText;
+    Text _opponentCurrentManaText = null;
+    public Text OpponentCurrentManaText => _opponentCurrentManaText;
+    Text _opponentMaxManaText = null;
+    public Text OpponentMaxManaText => _opponentMaxManaText;
 
     /************
      自分側
@@ -55,13 +57,25 @@ public class BattleUIManager : MonoBehaviour
 
     GameObject _ownHands = null;
     public GameObject OwnHands => _ownHands;
-  
+
     GameObject _ownPlayerView = null;
     public GameObject OwnPlayerView => _ownPlayerView;
     Text _ownHPText = null;
     public Text OwnHPText => _ownHPText;
     Text _ownManaText = null;
     public Text OwnManaText => _ownManaText;
+    Text _ownMaxManaText = null;
+    public Text OwnMaxManaText => _ownMaxManaText;
+
+    
+    /*
+     * ボタン
+     * */
+    Button _turnEndButton = null;
+    public Button TurnEndButton => _turnEndButton;
+
+    Button _debugOpponentTurnEndButton = null;
+    public Button DebugOpponentTurnEndButton => _debugOpponentTurnEndButton;
 
     private void Awake()
     {
@@ -73,52 +87,53 @@ public class BattleUIManager : MonoBehaviour
     /// </summary>
     public void SetUpUI()
     {
+        //キャンバス
         _canvas = Instantiate(Resources.Load<GameObject>("UIPrefabs/Canvas"));
-        if (!_opponentDeck)
-        {
-            _opponentDeck =Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"),_canvas.transform)  ;
 
-        }
-        if (!_opponentField)
-        {
-            _opponentField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentField"), _canvas.transform);
-        }
-        if (!_opponentHands)
-        {
-            _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), _canvas.transform);
-        }
-        if (!_opponentPlayerView)
-        {
-            _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
-            _opponentHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"),_opponentPlayerView.transform);
-            _opponentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
-            Debug.Log(_opponentHPText);
-        }
+        //敵デッキ
+        _opponentDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentDeck"), _canvas.transform);
 
-        if (!_ownDeck)
-        {
-            _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), _canvas.transform);
-        }
-        if (!_ownField)
-        {
-            _ownField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownField"), _canvas.transform);
-        }
-        if (!_ownHands)
-        {
-            _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), _canvas.transform);
-        }
-        if (!_ownPlayerView)
-        {
-            _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
-            _ownHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
-            _ownManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
-            Debug.Log(_ownHPText);
-        }
-        if (!_currentDrugParent)
-        {
-            _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"),_canvas.transform);
-            _currentDrugParent.transform.parent.SetAsLastSibling();
-        }
+        //敵フィールド
+        _opponentField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentField"), _canvas.transform);
+
+        //敵手札
+        _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), _canvas.transform);
+
+        //敵情報
+        _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
+        _opponentHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
+        _opponentCurrentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
+        _opponentMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
+
+        //味方デッキ
+        _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), _canvas.transform);
+
+        //味方フィールド
+        _ownField = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownField"), _canvas.transform);
+
+        //味方手札
+        _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), _canvas.transform);
+
+        //味方情報
+        _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
+        _ownHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+        _ownManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+        _ownMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+
+        _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"), _canvas.transform);
+        _currentDrugParent.transform.parent.SetAsLastSibling();
+
+        //ターン終了ボタン
+        _turnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
+        _turnEndButton.transform.SetAsLastSibling();
+        _turnEndButton.GetComponentInChildren<Text>().text = "ターン終了";
+        _turnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(700,0,0);
+
+        //敵のターン終了ボタン（デバッグ用）
+        _debugOpponentTurnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
+        _debugOpponentTurnEndButton.transform.SetAsLastSibling();
+        _debugOpponentTurnEndButton.GetComponentInChildren<Text>().text = "敵ターン終了";
+        _debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition= new Vector3(-700, 0, 0);
     }
 
     /// <summary>

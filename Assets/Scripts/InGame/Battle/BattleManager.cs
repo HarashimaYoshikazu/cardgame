@@ -94,8 +94,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public void Init()
     {
-        _player  = new Unit(20, 10, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText);
-        _enemy = new Unit(20, 10, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentManaText);
+        _player  = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText);
+        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText);
         SetUpCards();
     }
 
@@ -132,12 +132,14 @@ public class BattleManager : Singleton<BattleManager>
     const int _addMana = 1;
     public void PlayerTurnStart()
     {
-        Player.ChangeMana(_addMana);
+        Player.ChangeMaxMana(_addMana);
+        Player.ResetCurrentMana();
         _isMyTurn = true;    
     }
     public void EnemyTurnStart()
     {
-        Enemy.ChangeMana(_addMana);
+        Enemy.ChangeMaxMana(_addMana);
+        Enemy.ResetCurrentMana();
         _isMyTurn = false;
     }
 }
