@@ -5,6 +5,15 @@ public class CardData
     string _name;
     public string Name => _name;
 
+    int _attack = 0;
+    public int Attack => _attack;
+
+    int _hp = 0;
+    public int HP => _hp;
+
+    int _cost = 0;
+    public int Cost => _cost;
+
     /// <summary>ÉJÅ[ÉhÇÃãZÇÃêî</summary>
     int _skillValue;
     public int SkillValue => _skillValue;
@@ -21,6 +30,9 @@ public class CardData
     {
         CardBaseSO cardBaseSO = Resources.Load<CardBaseSO>("CardSO/Card" + cardID);
         _name = cardBaseSO.Name;
+        _attack = cardBaseSO.Attack;
+        _hp = cardBaseSO.HP;
+        _cost = cardBaseSO.Cost;
         _skillValue = cardBaseSO.SkillValue;
         _element = cardBaseSO.Element;
         _sprite = cardBaseSO.Sprite;

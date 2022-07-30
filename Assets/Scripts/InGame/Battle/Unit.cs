@@ -11,12 +11,12 @@ public class Unit
     public int MaxHP => _maxHP;
 
     ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
-    public ReactiveProperty<int> CurrentHP => _currentHP;
+    public int CurrentHP => _currentHP.Value;
 
     int _maxMana = 0;
     public int MaxMana => _maxMana;
     ReactiveProperty<int> _currentMana = new ReactiveProperty<int>();
-    public ReactiveProperty<int> CurrentMana => _currentMana;
+    public int CurrentMana => _currentMana.Value;
 
     public Unit(int initMaxHP,int initMaxMana,Text hpText,Text manaText)
     {

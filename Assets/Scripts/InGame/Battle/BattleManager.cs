@@ -8,30 +8,10 @@ public class BattleManager : Singleton<BattleManager>
 
     Unit _player = null;
     /// <summary>プレイヤーの情報クラス</summary>
-    public Unit Player
-    {
-        get
-        {
-            //if(_player == null)
-            //{
-            //    _player = new Unit(20,10,BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText);
-            //}
-            return _player;
-        }
-    }
+    public Unit Player => _player;
     Unit _enemy = null;
     /// <summary>敵の情報クラス</summary>
-    public Unit Enemy
-    {
-        get
-        {
-            //if (_enemy == null)
-            //{
-            //    _enemy = new Unit(20,10,BattleUIManagerInstance.OwnHPText,BattleUIManagerInstance.OwnManaText);
-            //}
-            return _enemy;
-        }
-    }
+    public Unit Enemy => _enemy;
 
     /// <summary>山札</summary>
     List<int> _deck = new List<int>();

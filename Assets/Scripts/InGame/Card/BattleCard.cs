@@ -113,8 +113,9 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
             return;
         }
         //自分のフィールドオブジェクトだったら子オブジェクトにする
-        if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField)
+        if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
         {
+            BattleManager.Instance.Player.ChangeMana(-(_cardData.Cost));
             this.transform.SetParent(_currentPointerObject.transform);
         }
         //違ったらraycastTargetを有効にして手札に戻す
