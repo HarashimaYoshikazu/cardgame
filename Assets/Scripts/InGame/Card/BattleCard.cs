@@ -19,6 +19,9 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     [SerializeField, Tooltip("カード自体のImageクラス")]
     Image _cardImage = null;
 
+    [SerializeField,Tooltip("カードの名前テキストクラス")]
+    Text _nameText = null;
+
     [SerializeField,Tooltip("コストを表示するテキストクラス")]
     Text _costText = null;
 
@@ -62,6 +65,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
             _cardImage.raycastTarget = false;
         }
         _cardImage.sprite = _cardData.Sprite;
+
+        _nameText.text = _cardData.Name;
 
         if (!_rectTransform)
         {

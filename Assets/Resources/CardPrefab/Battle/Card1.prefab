@@ -141,6 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: 1
   _cardImage: {fileID: 8416323907556878929}
+  _nameText: {fileID: 7442055653928607233}
   _costText: {fileID: 8352904224592050266}
   _attackText: {fileID: 3223866231357650701}
   _hpText: {fileID: 7690818911085069160}
