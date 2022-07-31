@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: "\u3086\u3046\u3057\u3083"
   _attack: 2
-  _hp: 4
+  _maxHP: 4
   _cost: 2
   _skillValue: 2
   _element: 0

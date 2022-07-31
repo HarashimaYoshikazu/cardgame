@@ -13,11 +13,20 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     /// <summary>カードの固有番号</summary>
     public int CardID => cardID;
 
-    /// <summary>カードのImageクラス</summary>
-    Image _image;
+    /// <summary>カード背景のImageクラス</summary>
+    Image _backGroundImage = null;
 
-    /// <summary>カードのButtonクラス</summary>
-    Button _button;
+    [SerializeField, Tooltip("カード自体のImageクラス")]
+    Image _cardImage = null;
+
+    [SerializeField,Tooltip("コストを表示するテキストクラス")]
+    Text _costText = null;
+
+    [SerializeField,Tooltip("攻撃力を表示するテキストクラス")]
+    Text _attackText = null;
+
+    [SerializeField,Tooltip("HPを表示するテキストクラス")]
+    Text _hpText = null;
 
     /// <summary>カードのRectTransformクラス</summary>
     RectTransform _rectTransform;
@@ -25,31 +34,12 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     /// <summary>カードの情報を格納したクラスのインスタンス</summary>
     CardData _cardData;
 
-    BattleCardState _currentState = BattleCardState.Hands;
-    public void SetCurrentCardState(BattleCardState battleCardState)
-    {
-        switch (battleCardState)
-        {
-            case BattleCardState.Hands:
-                break;
-            case BattleCardState.FIeld:
-                break;
-        }
-
-        _currentState = battleCardState;
-    }
-
     /// <summary>キャッシュ用の変数</summary>
     GameObject _currentPointerObject = null;
 
     private void Awake()
     {
         Init();
-        _button.onClick.AddListener(() =>
-        {
-
-        });
-
     }
     /// <summary>
     /// カードの初期化関数
@@ -57,19 +47,21 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     void Init()
     {
         //カードデータをIDに基づいて生成
-        _cardData = new CardData(cardID);
+        _cardData = new CardData(cardID,_attackText,_hpText,_costText,this.gameObject);
 
         //コンポーネントのキャッシュ
-        if (!_image)
+        if (!_backGroundImage)
         {
-            _image = GetComponent<Image>();
+            _backGroundImage = GetComponent<Image>();
         }
-        _image.sprite = _cardData.Sprite;
 
-        if (!_button)
+        if (!_cardImage)
         {
-            _button = GetComponent<Button>();
+            _cardImage = Instantiate(Resources.Load<Image>("UIPrefabs/ImageObject"),this.transform);
+            _cardImage.rectTransform.anchoredPosition = new Vector2(0,40);
+            _cardImage.raycastTarget = false;
         }
+        _cardImage.sprite = _cardData.Sprite;
 
         if (!_rectTransform)
         {
@@ -88,7 +80,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
             return;
         }
         //カードの下のObjectを取得したいからraycastTargetを無効にする
-        _image.raycastTarget = false;
+        _backGroundImage.raycastTarget = false;
         //ドラッグしてるとき用のオブジェクトの子オブジェクトにする
         this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform);
     }
@@ -121,15 +113,9 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         //違ったらraycastTargetを有効にして手札に戻す
         else
         {
-            _image.raycastTarget = true;
+            _backGroundImage.raycastTarget = true;
             this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform);
         }
 
     }
-}
-
-public enum BattleCardState
-{
-    Hands,
-    FIeld,
 }

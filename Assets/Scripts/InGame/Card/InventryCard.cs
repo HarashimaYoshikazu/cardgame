@@ -14,6 +14,15 @@ public class InventryCard : MonoBehaviour
     [SerializeField]
     Image _image;
 
+    [SerializeField, Tooltip("コストを表示するテキストクラス")]
+    Text _costText = null;
+
+    [SerializeField, Tooltip("攻撃力を表示するテキストクラス")]
+    Text _attackText = null;
+
+    [SerializeField, Tooltip("HPを表示するテキストクラス")]
+    Text _hpText = null;
+
     [SerializeField]
     Button _button;
 
@@ -52,6 +61,6 @@ public class InventryCard : MonoBehaviour
 
     void Init()
     {
-        _cardData = new CardData(cardID);
+        _cardData = new CardData(cardID,_attackText,_hpText,_costText, this.gameObject);
     }
 }

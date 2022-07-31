@@ -24,13 +24,13 @@ public class CardBaseSO : ScriptableObject
 #endif
     }
 
-    [SerializeField, Tooltip("HP")]
-    int _hp = 0;
-    public int HP
+    [SerializeField, Tooltip("ç≈ëÂHP")]
+    int _maxHP = 0;
+    public int MAXHP
     {
-        get { return _hp; }
+        get { return _maxHP; }
 #if UNITY_EDITOR
-        set { _hp = value; }
+        set { _maxHP = value; }
 #endif
     }
 
