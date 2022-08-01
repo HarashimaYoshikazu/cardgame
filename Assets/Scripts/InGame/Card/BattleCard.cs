@@ -19,16 +19,16 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     [SerializeField, Tooltip("カード自体のImageクラス")]
     Image _cardImage = null;
 
-    [SerializeField,Tooltip("カードの名前テキストクラス")]
+    [SerializeField, Tooltip("カードの名前テキストクラス")]
     Text _nameText = null;
 
-    [SerializeField,Tooltip("コストを表示するテキストクラス")]
+    [SerializeField, Tooltip("コストを表示するテキストクラス")]
     Text _costText = null;
 
-    [SerializeField,Tooltip("攻撃力を表示するテキストクラス")]
+    [SerializeField, Tooltip("攻撃力を表示するテキストクラス")]
     Text _attackText = null;
 
-    [SerializeField,Tooltip("HPを表示するテキストクラス")]
+    [SerializeField, Tooltip("HPを表示するテキストクラス")]
     Text _hpText = null;
 
     /// <summary>カードのRectTransformクラス</summary>
@@ -39,6 +39,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     /// <summary>キャッシュ用の変数</summary>
     GameObject _currentPointerObject = null;
+
+    BattleCardState _cardState = BattleCardState.InHand;
 
     UnitType _owner;
     public UnitType OwnerType
@@ -57,7 +59,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     void Init()
     {
         //カードデータをIDに基づいて生成
-        _cardData = new CardData(cardID,_attackText,_hpText,_costText,this.gameObject);
+        _cardData = new CardData(cardID, _attackText, _hpText, _costText, this.gameObject);
 
         //コンポーネントのキャッシュ
         if (!_backGroundImage)
@@ -67,8 +69,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
         if (!_cardImage)
         {
-            _cardImage = Instantiate(Resources.Load<Image>("UIPrefabs/ImageObject"),this.transform);
-            _cardImage.rectTransform.anchoredPosition = new Vector2(0,40);
+            _cardImage = Instantiate(Resources.Load<Image>("UIPrefabs/ImageObject"), this.transform);
+            _cardImage.rectTransform.anchoredPosition = new Vector2(0, 40);
             _cardImage.raycastTarget = false;
         }
         _cardImage.sprite = _cardData.Sprite;
@@ -104,11 +106,21 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
-        //現在ポインター上にあるオブジェクトを検知して代入
-        _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
-        Debug.Log(_currentPointerObject.name);
-        //ドラッグ中はポインターに追従
-        _rectTransform.position = eventData.position;
+        switch (_cardState)
+        {
+            case BattleCardState.InField:
+
+                break;
+            case BattleCardState.InHand:
+                //現在ポインター上にあるオブジェクトを検知して代入
+                _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
+                Debug.Log(_currentPointerObject.name);
+                //ドラッグ中はポインターに追従
+                _rectTransform.position = eventData.position;
+                break;
+        }
+
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -117,18 +129,34 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
-        //自分のフィールドオブジェクトだったら子オブジェクトにする
-        if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
+        _backGroundImage.raycastTarget = true;
+
+        switch (_cardState)
         {
-            BattleManager.Instance.Player.ChangeCurrentMana(-(_cardData.Cost));
-            this.transform.SetParent(_currentPointerObject.transform);
-        }
-        //違ったらraycastTargetを有効にして手札に戻す
-        else
-        {
-            _backGroundImage.raycastTarget = true;
-            this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform);
+            case BattleCardState.InField:
+                Debug.Log("攻撃対象選んでください");
+                break;
+            case BattleCardState.InHand:
+                //自分のフィールドオブジェクトだったら子オブジェクトにする
+                if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
+                {
+                    _cardState = BattleCardState.InField; //カードの状態を変更
+                    BattleManager.Instance.Player.ChangeCurrentMana(-(_cardData.Cost));
+                    this.transform.SetParent(_currentPointerObject.transform);
+                }
+                //違ったらraycastTargetを有効にして手札に戻す
+                else
+                {
+                    this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform);
+                }
+                break;
         }
 
+
+    }
+    enum BattleCardState
+    {
+        InHand,
+        InField
     }
 }
