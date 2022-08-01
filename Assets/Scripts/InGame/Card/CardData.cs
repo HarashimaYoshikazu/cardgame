@@ -48,4 +48,9 @@ public class CardData
         _element = cardBaseSO.Element;
         _sprite = cardBaseSO.Sprite;
     }
+
+    public void ChangeHP(int value)
+    {
+        _hp.Value = Mathf.Clamp(_hp.Value + value,0,_maxHP);
+    }
 }

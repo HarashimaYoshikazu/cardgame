@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
-public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler
+public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler,IDamage
 {
     [SerializeField, Tooltip("カードの固有番号")]
     int cardID;
@@ -106,14 +106,14 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
+        //現在ポインター上にあるオブジェクトを検知して代入
+        _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
         switch (_cardState)
         {
             case BattleCardState.InField:
 
                 break;
             case BattleCardState.InHand:
-                //現在ポインター上にあるオブジェクトを検知して代入
-                _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
                 Debug.Log(_currentPointerObject.name);
                 //ドラッグ中はポインターに追従
                 _rectTransform.position = eventData.position;
@@ -129,12 +129,15 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
-        _backGroundImage.raycastTarget = true;
-
+        
         switch (_cardState)
         {
             case BattleCardState.InField:
-                Debug.Log("攻撃対象選んでください");
+                if (_currentPointerObject.TryGetComponent(out IDamage damage))
+                {
+                    damage.Damage(_cardData.Attack);
+                    Debug.Log($"damege{_currentPointerObject}");
+                }
                 break;
             case BattleCardState.InHand:
                 //自分のフィールドオブジェクトだったら子オブジェクトにする
@@ -151,12 +154,25 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 }
                 break;
         }
-
+        _backGroundImage.raycastTarget = true;
 
     }
+
+    public void Damage(int value)
+    {
+        if (_cardState == BattleCardState.InField)
+        {
+            _cardData.ChangeHP(-value);
+        }       
+    }
+
     enum BattleCardState
     {
         InHand,
         InField
     }
+}
+interface IDamage
+{
+    void Damage(int value);
 }
