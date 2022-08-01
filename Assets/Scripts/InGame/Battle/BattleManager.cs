@@ -5,23 +5,13 @@ using UniRx;
 
 public class BattleManager : Singleton<BattleManager>
 {
-
+    /// オンライン上では情報クラスは1つしかもたない。
     Unit _player = null;
     /// <summary>プレイヤーの情報クラス</summary>
     public Unit Player => _player;
     Unit _enemy = null;
     /// <summary>敵の情報クラス</summary>
     public Unit Enemy => _enemy;
-
-    /// <summary>山札</summary>
-    List<int> _deck = new List<int>();
-    public void AddDeck(int cardID) { _deck.Add(cardID); }
-    public void RemoveDeck(int cardID) { _deck.RemoveAt(cardID); }
-
-    /// <summary>手札</summary>
-    List<int> _hands = new List<int>();
-    public void AddHands(int cardID) { _hands.Add(cardID); }
-    public void RemoveHands(int cardID) { _hands.Remove(cardID); }
 
     //初期化設定
     public int FirstHands => BattleManagerAttachment.FirstHands;
@@ -94,33 +84,28 @@ public class BattleManager : Singleton<BattleManager>
 
     public void Init()
     {
-        _player  = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText);
-        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText);
-        SetUpCards();
-    }
-
-    void SetUpCards()
-    {
-        _deck = GameManager.Instance.DeckCards;
-        //デバッグ
-        if (_deck.Count == 0)
+        if (GameManager.Instance.DeckCards.Length ==0)
         {
-            for (int i = 0; i < GameManager.Instance.CardLimit; i++)
+            for (int i = 0;i<GameManager.Instance.CardLimit;i++)
             {
                 GameManager.Instance.AddCardToDeck(1);
-            }
+            }          
         }
+
+        _player  = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText, GameManager.Instance.DeckCards);
+        int[] enemyDeck = GameManager.Instance.DeckCards;
+        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText,enemyDeck);
         DistributeHands();
     }
 
     void DistributeHands()
     {
-        if (_hands.Count <= HandsLimit && _deck.Count > 0)
+        if (_player.Hands.Length <= HandsLimit && _player.Hands.Length > 0)
         {
             for (int i = 0; i < FirstHands; i++)
             {
-                int rand = Random.Range(0, _deck.Count);
-                int cardID = _deck[rand];
+                int rand = Random.Range(0, _player.Deck.Length-1);
+                int cardID = _player.Deck[rand];
                 DrawCard(cardID);
             }
         }
@@ -128,8 +113,8 @@ public class BattleManager : Singleton<BattleManager>
 
     private void DrawCard(int cardID)
     {
-        _hands.Add(cardID);
-        _deck.Remove(cardID);
+        _player.AddHands(cardID);
+        _player.RemoveDeck(cardID);
         _battleUIManager.CreateHandsObject(cardID);
     }
 
@@ -137,8 +122,8 @@ public class BattleManager : Singleton<BattleManager>
     const int _addMana = 1;
     public void PlayerTurnStart()
     {
-        int rand = Random.Range(0, _deck.Count);
-        int cardID = _deck[rand];
+        int rand = Random.Range(0, _player.Deck.Length-1);
+        int cardID = _player.Deck[rand];
         DrawCard(cardID);
         Player.ChangeMaxMana(_addMana);
         Player.ResetCurrentMana();

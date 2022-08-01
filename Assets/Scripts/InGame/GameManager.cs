@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
 
     /// <summary>デッキのカードリスト</summary>
     List<int> _decksCards = new List<int>();
-    public List<int> DeckCards => _decksCards;
+    public int[] DeckCards => _decksCards.ToArray();
 
     int _cardLimit = 20;
     public int CardLimit => _cardLimit;

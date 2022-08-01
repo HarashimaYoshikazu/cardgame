@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Unit
 {
@@ -18,6 +19,18 @@ public class Unit
     ReactiveProperty<int> _currentMana = new ReactiveProperty<int>();
     public int CurrentMana => _currentMana.Value;
 
+    /// <summary>山札</summary>
+    List<int> _deck = new List<int>();
+    public int[] Deck => _deck.ToArray();
+    public void AddDeck(int cardID) { _deck.Add(cardID); }
+    public void RemoveDeck(int cardID) { _deck.RemoveAt(cardID); }
+
+    /// <summary>手札</summary>
+    List<int> _hands = new List<int>();
+    public int[] Hands => _hands.ToArray();
+    public void AddHands(int cardID) { _hands.Add(cardID); }
+    public void RemoveHands(int cardID) { _hands.Remove(cardID); }
+
     /// <summary>
     /// 初期化
     /// </summary>
@@ -25,7 +38,7 @@ public class Unit
     /// <param name="currenthpText">現在のHPのView</param>
     /// <param name="currentmanaText">現在のマナのView</param>
     /// <param name="maxmanaText">最大マナのView</param>
-    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText)
+    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck)
     {
         _currentHP.Subscribe(x =>
         {
@@ -50,8 +63,9 @@ public class Unit
         _maxMana.Value = 0;
         _currentMana.Value = 0;
 
-
+        _deck = deck.ToList();
     }
+
 
     /// <summary>
     /// HPを変化させる関数。戻り値は死亡時はtrue。
