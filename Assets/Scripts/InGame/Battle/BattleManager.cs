@@ -84,53 +84,54 @@ public class BattleManager : Singleton<BattleManager>
 
     public void Init()
     {
-        if (GameManager.Instance.DeckCards.Length ==0)
+        if (GameManager.Instance.DeckCards.Length == 0)
         {
-            for (int i = 0;i<GameManager.Instance.CardLimit;i++)
+            for (int i = 0; i < GameManager.Instance.CardLimit; i++)
             {
                 GameManager.Instance.AddCardToDeck(1);
-            }          
-        }
-
-        _player  = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText, GameManager.Instance.DeckCards);
-        int[] enemyDeck = GameManager.Instance.DeckCards;
-        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText,enemyDeck);
-        DistributeHands();
-    }
-
-    void DistributeHands()
-    {
-        if (_player.Hands.Length <= HandsLimit && _player.Hands.Length > 0)
-        {
-            for (int i = 0; i < FirstHands; i++)
-            {
-                int rand = Random.Range(0, _player.Deck.Length-1);
-                int cardID = _player.Deck[rand];
-                DrawCard(cardID);
             }
         }
+
+        _player = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText, GameManager.Instance.DeckCards, UnitType.Player);
+        int[] enemyDeck = GameManager.Instance.DeckCards;
+        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText, enemyDeck, UnitType.Opponent);
+        DistributeHands(_player);
+        DistributeHands(_enemy);
     }
 
-    private void DrawCard(int cardID)
+    void DistributeHands(Unit unit)
     {
-        _player.AddHands(cardID);
-        _player.RemoveDeck(cardID);
-        _battleUIManager.CreateHandsObject(cardID);
+        for (int i = 0; i < FirstHands; i++)
+        {
+            int rand = Random.Range(0, unit.Deck.Length - 1);
+            int cardID = unit.Deck[rand];
+            DrawCard(unit, cardID);
+        }
+    }
+
+    private void DrawCard(Unit unit, int cardID)
+    {
+        unit.AddHands(cardID);
+        unit.RemoveDeck(cardID);
+        _battleUIManager.CreateHandsObject(unit.Type, cardID);
     }
 
     //ソロプレイ想定
     const int _addMana = 1;
     public void PlayerTurnStart()
     {
-        int rand = Random.Range(0, _player.Deck.Length-1);
+        int rand = Random.Range(0, _player.Deck.Length - 1);
         int cardID = _player.Deck[rand];
-        DrawCard(cardID);
+        DrawCard(_player, cardID);
         Player.ChangeMaxMana(_addMana);
         Player.ResetCurrentMana();
-        _isMyTurn = true;    
+        _isMyTurn = true;
     }
     public void EnemyTurnStart()
     {
+        int rand = Random.Range(0, _enemy.Deck.Length - 1);
+        int cardID = _enemy.Deck[rand];
+        DrawCard(_enemy, cardID);
         Enemy.ChangeMaxMana(_addMana);
         Enemy.ResetCurrentMana();
         _isMyTurn = false;

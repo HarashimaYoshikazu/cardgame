@@ -67,7 +67,7 @@ public class BattleUIManager : MonoBehaviour
     Text _ownMaxManaText = null;
     public Text OwnMaxManaText => _ownMaxManaText;
 
-    
+
     /*
      * ボタン
      * */
@@ -127,23 +127,36 @@ public class BattleUIManager : MonoBehaviour
         _turnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
         _turnEndButton.transform.SetAsLastSibling();
         _turnEndButton.GetComponentInChildren<Text>().text = "ターン終了";
-        _turnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(700,0,0);
+        _turnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(700, 0, 0);
 
         //敵のターン終了ボタン（デバッグ用）
         _debugOpponentTurnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
         _debugOpponentTurnEndButton.transform.SetAsLastSibling();
         _debugOpponentTurnEndButton.GetComponentInChildren<Text>().text = "敵ターン終了";
-        _debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition= new Vector3(-700, 0, 0);
+        _debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(-700, 0, 0);
     }
+
 
     /// <summary>
     /// IDに応じたカードをUI上に生成する
     /// </summary>
     /// <param name="cardID"></param>
-    public void CreateHandsObject(int cardID)
+    public void CreateHandsObject(UnitType unitType, int cardID)
     {
         var battleCardPrefab = Resources.Load<GameObject>($"CardPrefab/Battle/Card{cardID}");
-        var battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
+        GameObject battleCard = null;
+        switch (unitType)
+        {
+            case UnitType.Player:
+                battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
+                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Player;
+                return;
+            case UnitType.Opponent:
+                battleCard = Instantiate(battleCardPrefab, _opponentHands.transform);
+                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Opponent;
+                return;
+        }  
         _cardObjectList.Add(battleCard.GetComponent<BattleCard>());
     }
 }
+

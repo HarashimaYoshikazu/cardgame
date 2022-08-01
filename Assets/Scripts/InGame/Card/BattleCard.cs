@@ -40,6 +40,13 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     /// <summary>キャッシュ用の変数</summary>
     GameObject _currentPointerObject = null;
 
+    UnitType _owner;
+    public UnitType OwnerType
+    {
+        get { return _owner; }
+        set { _owner = value; }
+    }
+
     private void Awake()
     {
         Init();
@@ -80,7 +87,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     */
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!BattleManager.Instance.IsMyTurn)
+        //今はオーナーをPlayerで固定してる
+        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
         {
             return;
         }
@@ -92,7 +100,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!BattleManager.Instance.IsMyTurn)
+        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
         {
             return;
         }
@@ -105,7 +113,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (!BattleManager.Instance.IsMyTurn)
+        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
         {
             return;
         }

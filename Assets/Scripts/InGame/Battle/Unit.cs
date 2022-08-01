@@ -31,6 +31,9 @@ public class Unit
     public void AddHands(int cardID) { _hands.Add(cardID); }
     public void RemoveHands(int cardID) { _hands.Remove(cardID); }
 
+    UnitType _type;
+    public UnitType Type => _type;
+
     /// <summary>
     /// 初期化
     /// </summary>
@@ -38,7 +41,7 @@ public class Unit
     /// <param name="currenthpText">現在のHPのView</param>
     /// <param name="currentmanaText">現在のマナのView</param>
     /// <param name="maxmanaText">最大マナのView</param>
-    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck)
+    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck,UnitType unitType)
     {
         _currentHP.Subscribe(x =>
         {
@@ -64,6 +67,7 @@ public class Unit
         _currentMana.Value = 0;
 
         _deck = deck.ToList();
+        _type = unitType;
     }
 
 
@@ -101,4 +105,9 @@ public class Unit
     {
         _maxMana.Value += value;
     }
+}
+public enum UnitType
+{
+    Player,
+    Opponent
 }
