@@ -121,17 +121,25 @@ public class BattleManager : Singleton<BattleManager>
             {
                 int rand = Random.Range(0, _deck.Count);
                 int cardID = _deck[rand];
-                _hands.Add(cardID);
-                _deck.Remove(cardID);
-                _battleUIManager.CreateHandsObject(cardID);
+                DrawCard(cardID);
             }
         }
+    }
+
+    private void DrawCard(int cardID)
+    {
+        _hands.Add(cardID);
+        _deck.Remove(cardID);
+        _battleUIManager.CreateHandsObject(cardID);
     }
 
     //ソロプレイ想定
     const int _addMana = 1;
     public void PlayerTurnStart()
     {
+        int rand = Random.Range(0, _deck.Count);
+        int cardID = _deck[rand];
+        DrawCard(cardID);
         Player.ChangeMaxMana(_addMana);
         Player.ResetCurrentMana();
         _isMyTurn = true;    
