@@ -6,18 +6,19 @@ using UniRx;
 public class BattleManager : Singleton<BattleManager>
 {
     /// オンライン上では情報クラスは1つしかもたない。
-    Unit _player = null;
+    UnitData _player = null;
     /// <summary>プレイヤーの情報クラス</summary>
-    public Unit Player => _player;
-    Unit _enemy = null;
+    public UnitData Player => _player;
+    UnitData _enemy = null;
     /// <summary>敵の情報クラス</summary>
-    public Unit Enemy => _enemy;
+    public UnitData Enemy => _enemy;
 
     //初期化設定
     public int FirstHands => BattleManagerAttachment.FirstHands;
     public int HandsLimit => BattleManagerAttachment.HandsLimit;
 
     BattleManagerAttachment _battleManagerAttachment = null;
+    /// <summary>バトルの設定をインスペクターから設定するクラス</summary>
     public BattleManagerAttachment BattleManagerAttachment
     {
         get
@@ -40,6 +41,7 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     TurnCycle _turnCycleInstance = null;
+    /// <summary>ターン遷移を制御するクラスのインスタンス</summary>
     public TurnCycle TurnCycleInstance
     {
         get
@@ -72,6 +74,7 @@ public class BattleManager : Singleton<BattleManager>
         set { _battleUIManager = value; }
     }
 
+    /// <summary>どちらのプレイヤーが先行かのフラグ（デバッグ用）</summary>
     public bool IsFirstTurn { get { return BattleManagerAttachment.IsFirstTurn; } }
 
     bool _isMyTurn = false;
@@ -92,14 +95,14 @@ public class BattleManager : Singleton<BattleManager>
             }
         }
 
-        _player = new Unit(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText, GameManager.Instance.DeckCards, UnitType.Player);
+        _player = new UnitData(20, BattleUIManagerInstance.OwnHPText, BattleUIManagerInstance.OwnManaText, BattleUIManagerInstance.OwnMaxManaText, GameManager.Instance.DeckCards, UnitType.Player);
         int[] enemyDeck = GameManager.Instance.DeckCards;
-        _enemy = new Unit(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText, enemyDeck, UnitType.Opponent);
+        _enemy = new UnitData(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText, enemyDeck, UnitType.Opponent);
         DistributeHands(_player);
         DistributeHands(_enemy);
     }
 
-    void DistributeHands(Unit unit)
+    void DistributeHands(UnitData unit)
     {
         for (int i = 0; i < FirstHands; i++)
         {
@@ -109,7 +112,7 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    private void DrawCard(Unit unit, int cardID)
+    private void DrawCard(UnitData unit, int cardID)
     {
         unit.AddHands(cardID);
         unit.RemoveDeck(cardID);
@@ -131,9 +134,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         int rand = Random.Range(0, _enemy.Deck.Length - 1);
         int cardID = _enemy.Deck[rand];
-        DrawCard(_enemy, cardID);
-        Enemy.ChangeMaxMana(_addMana);
-        Enemy.ResetCurrentMana();
+        DrawCard(_enemy, cardID);//ランダムなカードを引く
+        Enemy.ChangeMaxMana(_addMana);//マナを増やす
+        Enemy.ResetCurrentMana();//マナ回復
         _isMyTurn = false;
     }
 }

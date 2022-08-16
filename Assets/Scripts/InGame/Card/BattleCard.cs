@@ -43,6 +43,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     BattleCardState _cardState = BattleCardState.InHand;
 
     UnitType _owner;
+    /// <summary>このカードの所有者</summary>
     public UnitType OwnerType
     {
         get { return _owner; }
@@ -94,10 +95,19 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
-        //カードの下のObjectを取得したいからraycastTargetを無効にする
-        _backGroundImage.raycastTarget = false;
-        //ドラッグしてるとき用のオブジェクトの子オブジェクトにする
-        this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform);
+
+        switch (_cardState)
+        {
+            case BattleCardState.InField:
+
+                break;
+            case BattleCardState.InHand:
+                //カードの下のObjectを取得したいからraycastTargetを無効にする
+                _backGroundImage.raycastTarget = false;
+                //ドラッグしてるとき用のオブジェクトの子オブジェクトにする
+                this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform);
+                break;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -114,7 +124,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
                 break;
             case BattleCardState.InHand:
-                Debug.Log(_currentPointerObject.name);
                 //ドラッグ中はポインターに追従
                 _rectTransform.position = eventData.position;
                 break;
@@ -135,7 +144,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
             case BattleCardState.InField:
                 if (_currentPointerObject.TryGetComponent(out IDamage damage))
                 {
-                    damage.Damage(_cardData.Attack);
+                    damage.Damage(-_cardData.Attack);
                     Debug.Log($"damege{_currentPointerObject}");
                 }
                 break;
@@ -171,8 +180,4 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         InHand,
         InField
     }
-}
-interface IDamage
-{
-    void Damage(int value);
 }

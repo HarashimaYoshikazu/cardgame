@@ -36,8 +36,10 @@ public class BattleUIManager : MonoBehaviour
     GameObject _opponentHands = null;
     public GameObject OpponentHands => _opponentHands;
 
-    GameObject _opponentPlayerView = null;
-    public GameObject OpponentPlayerView => _opponentPlayerView;
+    GameObject _opponentPlayerDataPanel = null;
+    public GameObject OpponentPlayerDataPanel => _opponentPlayerDataPanel;
+    UnitView _opponentPlayerView = null;
+    public UnitView OpponentPlayerView => _opponentPlayerView;
     Text _opponentHPText = null;
     public Text OpponentHPText => _opponentHPText;
     Text _opponentCurrentManaText = null;
@@ -58,8 +60,10 @@ public class BattleUIManager : MonoBehaviour
     GameObject _ownHands = null;
     public GameObject OwnHands => _ownHands;
 
-    GameObject _ownPlayerView = null;
-    public GameObject OwnPlayerView => _ownPlayerView;
+    GameObject _ownPlayerDataPanel = null;
+    public GameObject OwnPlayerDataPanel => _ownPlayerDataPanel;
+        UnitView _ownPlayerView = null;
+    public UnitView OwnPlayerView => _opponentPlayerView;
     Text _ownHPText = null;
     public Text OwnHPText => _ownHPText;
     Text _ownManaText = null;
@@ -100,10 +104,11 @@ public class BattleUIManager : MonoBehaviour
         _opponentHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentHands"), _canvas.transform);
 
         //ìGèÓïÒ
-        _opponentPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
+        _opponentPlayerDataPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
+        _opponentPlayerView = UnitView.Instantiate(Resources.Load<UnitView>("UIPrefabs/Battle/UnitObject"), _opponentPlayerDataPanel.transform,UnitType.Opponent);
         _opponentHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
-        _opponentCurrentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
-        _opponentMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
+        _opponentCurrentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerDataPanel.transform);
+        _opponentMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerDataPanel.transform);
 
         //ñ°ï˚ÉfÉbÉL
         _ownDeck = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownDeck"), _canvas.transform);
@@ -115,10 +120,11 @@ public class BattleUIManager : MonoBehaviour
         _ownHands = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownHands"), _canvas.transform);
 
         //ñ°ï˚èÓïÒ
-        _ownPlayerView = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
+        _ownPlayerDataPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/ownPlayerView"), _canvas.transform);
+        _ownPlayerView = UnitView.Instantiate(Resources.Load<UnitView>("UIPrefabs/Battle/UnitObject"), _ownPlayerDataPanel.transform, UnitType.Player);
         _ownHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
-        _ownManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
-        _ownMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerView.transform);
+        _ownManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerDataPanel.transform);
+        _ownMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _ownPlayerDataPanel.transform);
 
         _currentDrugParent = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/CurrentDrugParent"), _canvas.transform);
         _currentDrugParent.transform.parent.SetAsLastSibling();
@@ -149,7 +155,7 @@ public class BattleUIManager : MonoBehaviour
         {
             case UnitType.Player:
                 battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
-                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Player;
+                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Player; //ç°ÇÕíºê⁄ë„ì¸ÇµÇƒÇÈ
                 return;
             case UnitType.Opponent:
                 battleCard = Instantiate(battleCardPrefab, _opponentHands.transform);

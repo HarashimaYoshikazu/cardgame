@@ -5,7 +5,7 @@ using UniRx;
 using UnityEngine.UI;
 using System.Linq;
 
-public class Unit
+public class UnitData
 {
     //ひとまずメンバ変数に最大値を格納してる
     int _maxHP = 0;
@@ -41,7 +41,7 @@ public class Unit
     /// <param name="currenthpText">現在のHPのView</param>
     /// <param name="currentmanaText">現在のマナのView</param>
     /// <param name="maxmanaText">最大マナのView</param>
-    public Unit(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck,UnitType unitType)
+    public UnitData(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck,UnitType unitType)
     {
         _currentHP.Subscribe(x =>
         {
@@ -108,6 +108,7 @@ public class Unit
 }
 public enum UnitType
 {
+    None,
     Player,
     Opponent
 }
