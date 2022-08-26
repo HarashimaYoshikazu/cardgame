@@ -19,3 +19,4 @@ MonoBehaviour:
   _skillValue: 2
   _element: 0
   _sprite: {fileID: 21300000, guid: 48150d4d3b59c1d4494daa076e3b0128, type: 3}
+  _playType: 1

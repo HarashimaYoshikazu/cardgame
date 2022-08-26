@@ -73,6 +73,16 @@ public class CardBaseSO : ScriptableObject
         set { _sprite = value; }
 #endif
     }
+
+    [SerializeField, Tooltip("カードのタイプ")]
+    PlayType _playType;
+    public PlayType PlayType
+    {
+        get { return _playType; }
+#if UNITY_EDITOR
+        set { _playType = value; }
+#endif
+    }
 }
 
 /// <summary>
@@ -83,5 +93,12 @@ public enum Elements
     Fire,
     Wood,
     Water
+}
+
+public enum PlayType
+{
+    None,
+    Minion,
+    Spell
 }
 
