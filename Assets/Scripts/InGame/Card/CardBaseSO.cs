@@ -44,13 +44,13 @@ public class CardBaseSO : ScriptableObject
 #endif
     }
 
-    [SerializeField, Range(1, 2), Tooltip("ãZÇÃêî")]
-    int _skillValue;
-    public int SkillValue
+    [SerializeField,SerializeReference,Tooltip("ãZ")]
+    ISkill _skillValue;
+    public ISkill SkillValue
     {
         get { return _skillValue; }
 #if UNITY_EDITOR
-        set { _skillValue = Mathf.Clamp(value, 1, 2); }
+        set { _skillValue = value; }
 #endif
     }
 

@@ -128,8 +128,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 _rectTransform.position = eventData.position;
                 break;
         }
-
-
     }
 
     public void OnPointerUp(PointerEventData eventData)

@@ -42,10 +42,10 @@ public class CardGameEditerWindow : EditorWindow
                     _sample.Name = EditorGUILayout.TextField("カードの名前", _sample.Name);
                 }
 
-                using (new GUILayout.HorizontalScope())
-                {
-                    _sample.SkillValue = EditorGUILayout.IntField("スキルの数", _sample.SkillValue);
-                }
+                //using (new GUILayout.HorizontalScope())
+                //{
+                //    _sample.SkillValue = EditorGUILayout.ObjectField("スキルの数", _sample.SkillValue, typeof(ISkill), false) as ISkill; ;
+                //}
 
                 using (new GUILayout.HorizontalScope())
                 {

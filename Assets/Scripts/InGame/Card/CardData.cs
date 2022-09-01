@@ -21,8 +21,8 @@ public class CardData
     public int Cost => _cost.Value;
 
     /// <summary>カードの技の数</summary>
-    int _skillValue;
-    public int SkillValue => _skillValue;
+    ISkill _skillValue;
+    public ISkill SkillValue => _skillValue;
 
     /// <summary>カードの属性</summary>
     Elements _element;
