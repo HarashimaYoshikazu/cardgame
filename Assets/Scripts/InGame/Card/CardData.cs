@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using System.Collections.Generic;
 
 public class CardData
 {
@@ -21,8 +22,8 @@ public class CardData
     public int Cost => _cost.Value;
 
     /// <summary>カードの技の数</summary>
-    ISkill _skillValue;
-    public ISkill SkillValue => _skillValue;
+    List<ISkill> _skillValue;
+    public List<ISkill> SkillValue => _skillValue;
 
     /// <summary>カードの属性</summary>
     Elements _element;

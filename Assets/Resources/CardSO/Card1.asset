@@ -16,7 +16,10 @@ MonoBehaviour:
   _attack: 2
   _maxHP: 4
   _cost: 2
-  _skillValue: 2
+  _skillValue: []
   _element: 0
   _sprite: {fileID: 21300000, guid: 48150d4d3b59c1d4494daa076e3b0128, type: 3}
   _playType: 1
+  references:
+    version: 2
+    RefIds: []

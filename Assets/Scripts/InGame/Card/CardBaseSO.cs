@@ -1,5 +1,9 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using UnityEngine;
 
 [Serializable]
 public class CardBaseSO : ScriptableObject
@@ -43,10 +47,9 @@ public class CardBaseSO : ScriptableObject
         set { _cost = value; }
 #endif
     }
-
     [SerializeField,SerializeReference,Tooltip("‹Z")]
-    ISkill _skillValue;
-    public ISkill SkillValue
+     List<ISkill> _skillValue;
+    public List<ISkill> SkillValue
     {
         get { return _skillValue; }
 #if UNITY_EDITOR
