@@ -47,9 +47,9 @@ public class CardBaseSO : ScriptableObject
         set { _cost = value; }
 #endif
     }
-    [SerializeField,SerializeReference,Tooltip("‹Z")]
-     List<ISkill> _skillValue;
-    public List<ISkill> SkillValue
+    [SerializeField,SerializeReference,Tooltip("‹Z"),SubclassSelector]
+     List<CardSkill> _skillValue;
+    public List<CardSkill> SkillValue
     {
         get { return _skillValue; }
 #if UNITY_EDITOR

@@ -20,10 +20,10 @@ public class CardData
 
     ReactiveProperty<int> _cost = new ReactiveProperty<int>();
     public int Cost => _cost.Value;
-
+    [SerializeField]
     /// <summary>カードの技の数</summary>
-    List<ISkill> _skillValue;
-    public List<ISkill> SkillValue => _skillValue;
+    List<CardSkill> _skillValue;
+    public List<CardSkill> SkillValue => _skillValue;
 
     /// <summary>カードの属性</summary>
     Elements _element;
