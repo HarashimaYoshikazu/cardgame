@@ -1,4 +1,5 @@
 public enum AbilityType
 {
-    Damage
+    Damage,
+    Buff
 }
