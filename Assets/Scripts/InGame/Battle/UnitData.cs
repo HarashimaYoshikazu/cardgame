@@ -46,6 +46,10 @@ public class UnitData
         _currentHP.Subscribe(x =>
         {
             currenthpText.text = x.ToString();
+            if (x <= 0)
+            {
+                BattleManager.Instance.TurnCycleInstance.ChangeState(TurnCycle.EventEnum.Result);
+            }
             Debug.Log($"現在のHP{x}");
         });
 
@@ -75,17 +79,9 @@ public class UnitData
     /// HPを変化させる関数。戻り値は死亡時はtrue。
     /// </summary>
     /// <param name="value">現在のHPに加算される値。</param>
-    public bool ChangeCurrentHP(int value)
+    public void ChangeCurrentHP(int value)
     {
         _currentHP.Value = Mathf.Clamp(_currentHP.Value + value,0,_maxHP);
-        if (_currentHP.Value <=0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     /// <summary>

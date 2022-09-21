@@ -21,8 +21,8 @@ public class TurnCycle : MonoBehaviour
 
         _stateMachine = new StateMachine<EventEnum>();
 
-        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd,IsDeath);
-        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd, IsDeath);
+        _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd);
+        _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd);
 
         _stateMachine.AddAnyTransitionTo<EndState>(EventEnum.Result);
 
@@ -45,9 +45,9 @@ public class TurnCycle : MonoBehaviour
         });
     }
 
-    bool IsDeath()
+    public void ChangeState(EventEnum eventEnum)
     {
-        return true;
+        _stateMachine.Dispatch(eventEnum);
     }
 
     class MyTurn :StateMachine<EventEnum>.State
@@ -68,7 +68,10 @@ public class TurnCycle : MonoBehaviour
 
     class EndState : StateMachine<EventEnum>.State
     {
-
+        public override void OnEnter(StateMachine<EventEnum>.State prevState)
+        {
+            Debug.Log("èIóπ");
+        }
     }
 }
 
