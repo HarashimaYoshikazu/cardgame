@@ -30,6 +30,35 @@ public class UnitData
     public int[] Hands => _hands.ToArray();
     public void AddHands(int cardID) { _hands.Add(cardID); }
     public void RemoveHands(int cardID) { _hands.Remove(cardID); }
+    public int GetRandomHandsCardID
+    {
+        get
+        {
+            int rand = Random.Range(0, _deck.Count - 1);
+            int cardID = _deck[rand];
+            return cardID;
+        }
+    }
+    public int GetCanPlayRandomHandsCardID
+    {
+        get
+        {
+            var hands = _hands.Where(x => Resources.Load<CardBaseSO>("CardSO/Card" + x).Cost <= _currentMana.Value).ToList();
+            if (hands.Count <= 0)
+            {
+                return -1;
+            }
+            int rand = Random.Range(0, hands.Count - 1);
+            int cardID = _deck[rand];
+            return cardID;
+        }
+    }
+
+    /// <summary>場</summary>
+    List<int> _fields = new List<int>();
+    public int[] Fields => _fields.ToArray();
+    public void AddFields(int cardID) { _fields.Add(cardID); }
+    public void RemoveFields(int cardID) { _fields.Remove(cardID); }
 
     UnitType _type;
     public UnitType Type => _type;
@@ -41,7 +70,7 @@ public class UnitData
     /// <param name="currenthpText">現在のHPのView</param>
     /// <param name="currentmanaText">現在のマナのView</param>
     /// <param name="maxmanaText">最大マナのView</param>
-    public UnitData(int initMaxHP,Text currenthpText,Text currentmanaText,Text maxmanaText,int[] deck,UnitType unitType)
+    public UnitData(int initMaxHP, Text currenthpText, Text currentmanaText, Text maxmanaText, int[] deck, UnitType unitType)
     {
         _currentHP.Subscribe(x =>
         {
@@ -61,7 +90,7 @@ public class UnitData
         });
 
         _maxHP = initMaxHP;
-        _currentHP.Value =_maxHP;
+        _currentHP.Value = _maxHP;
 
         _maxMana.Value = 0;
         _currentMana.Value = 0;
@@ -70,6 +99,11 @@ public class UnitData
         _type = unitType;
     }
 
+    public void PlayCard(int cardID)
+    {
+        _hands.Remove(cardID);
+        _fields.Add(cardID);
+    }
 
     /// <summary>
     /// HPを変化させる関数。戻り値は死亡時はtrue。
@@ -77,7 +111,7 @@ public class UnitData
     /// <param name="value">現在のHPに加算される値。</param>
     public void ChangeCurrentHP(int value)
     {
-        _currentHP.Value = Mathf.Clamp(_currentHP.Value + value,0,_maxHP);
+        _currentHP.Value = Mathf.Clamp(_currentHP.Value + value, 0, _maxHP);
         if (_currentHP.Value <= 0)
         {
             BattleManager.Instance.TurnCycleInstance.ChangeState(TurnCycle.EventEnum.Result);
@@ -89,7 +123,7 @@ public class UnitData
     /// </summary>
     public void ChangeCurrentMana(int value)
     {
-        _currentMana.Value = Mathf.Clamp(_currentMana.Value +value,0,_maxMana.Value);
+        _currentMana.Value = Mathf.Clamp(_currentMana.Value + value, 0, _maxMana.Value);
     }
 
     public void ResetCurrentMana()

@@ -167,7 +167,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 break;
         }
         _backGroundImage.raycastTarget = true;
-
     }
 
     

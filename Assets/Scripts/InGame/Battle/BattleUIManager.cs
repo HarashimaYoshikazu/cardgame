@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 /// <summary>
 /// UI上のオブジェクトを生成、管理するクラス
 /// </summary>
 public class BattleUIManager : MonoBehaviour
 {
-    List<BattleCard> _cardObjectList = new List<BattleCard>();
-    public List<BattleCard> CardObjects => _cardObjectList;
-
     GameObject _canvas = null;
     public GameObject Canvas => _canvas;
 
@@ -26,6 +24,13 @@ public class BattleUIManager : MonoBehaviour
     /************
      相手側
      ***********/
+
+    /// <summary>手札のカードUIの配列 </summary>
+    List<BattleCard> _opponentHandCards = new List<BattleCard>();
+    public BattleCard[] OpponentHandCards => _opponentHandCards.ToArray();
+    /// <summary>場のカードUIの配列 </summary>
+    List<BattleCard> _opponentFieldCards = new List<BattleCard>();
+    public BattleCard[] OpponentFieldCards => _opponentFieldCards.ToArray();
 
     GameObject _opponentDeck = null;
     public GameObject OpponentDeck => _opponentDeck;
@@ -50,6 +55,12 @@ public class BattleUIManager : MonoBehaviour
     /************
      自分側
       ***********/
+    /// <summary>手札のカードUIの配列 </summary>
+    List<BattleCard> _ownHandCards = new List<BattleCard>();
+    public BattleCard[] OwnHandCards => _ownHandCards.ToArray();
+    /// <summary>場のカードUIの配列 </summary>
+    List<BattleCard> _ownFieldCards = new List<BattleCard>();
+    public BattleCard[] OwnFieldCards => _ownFieldCards.ToArray();
 
     GameObject _ownDeck = null;
     public GameObject Oendeck => _ownDeck;
@@ -142,6 +153,15 @@ public class BattleUIManager : MonoBehaviour
         _debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(-700, 0, 0);
     }
 
+    BattleCard ConvertCard(BattleCard[] battleCards, int cardID)
+    {
+        var cards = battleCards.Where(c => c.CardID == cardID);
+        if (cards.Count() <= 0)
+        {
+            Debug.LogError($"パラメータの配列に指定のカードが含まれていません。配列：{battleCards}cardID:{cardID}");
+        }
+        return cards.Single();
+    }
 
     /// <summary>
     /// IDに応じたカードをUI上に生成する
@@ -149,20 +169,88 @@ public class BattleUIManager : MonoBehaviour
     /// <param name="cardID"></param>
     public void CreateHandsObject(UnitType unitType, int cardID)
     {
-        var battleCardPrefab = Resources.Load<GameObject>($"CardPrefab/Battle/Card{cardID}");
-        GameObject battleCard = null;
+        var battleCardPrefab = Resources.Load<BattleCard>($"CardPrefab/Battle/Card{cardID}");
+        BattleCard battleCard = null;
         switch (unitType)
         {
             case UnitType.Player:
                 battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
-                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Player; //今は直接代入してる
-                return;
+                AddHand(UnitType.Player,battleCard);
+                battleCard.OwnerType = UnitType.Player; //今は直接代入してる
+                break;
             case UnitType.Opponent:
                 battleCard = Instantiate(battleCardPrefab, _opponentHands.transform);
-                battleCard.GetComponent<BattleCard>().OwnerType = UnitType.Opponent;
-                return;
+                AddHand(UnitType.Opponent, battleCard);
+                battleCard.OwnerType = UnitType.Opponent;
+                break;
         }  
-        _cardObjectList.Add(battleCard.GetComponent<BattleCard>());
+    }
+
+    public void AddHand(UnitType unitType,BattleCard card)
+    {
+        switch (unitType)
+        {
+            case UnitType.Player:
+                _ownHandCards.Add(card);
+                card.transform.SetParent(_ownHands.transform);
+                break;
+            case UnitType.Opponent:
+                _opponentHandCards.Add(card);
+                card.transform.SetParent(_opponentHands.transform);
+                break;
+        }
+    }
+
+    public void RemoveHand(UnitType unitType, BattleCard card)
+    {
+        switch (unitType)
+        {
+            case UnitType.Player:
+                _ownHandCards.Remove(card);
+                break;
+            case UnitType.Opponent:
+                _opponentHandCards.Remove(card);
+                break;
+        }
+    }
+    public void RemoveHand(UnitType unitType, BattleCard[] battleCards, int cardID)
+    {
+        var card = ConvertCard(battleCards, cardID);
+        RemoveHand(unitType, card);
+    }
+
+    public void AddField(UnitType unitType, BattleCard card)
+    {
+        switch (unitType)
+        {
+            case UnitType.Player:
+                _ownFieldCards.Add(card);
+                card.transform.SetParent(_ownField.transform);
+                break;
+            case UnitType.Opponent:
+                _opponentFieldCards.Add(card);
+                card.transform.SetParent(_opponentField.transform);
+                break;
+        }
+    }
+
+    public void AddField(UnitType unitType, BattleCard[] battleCards, int cardID)
+    {
+        var card = ConvertCard(battleCards,cardID);
+        AddField(unitType,card);
+    }
+
+    public void RemoveField(UnitType unitType, BattleCard card)
+    {
+        switch (unitType)
+        {
+            case UnitType.Player:
+                _ownFieldCards.Remove(card);
+                break;
+            case UnitType.Opponent:
+                _opponentFieldCards.Remove(card);
+                break;
+        }
     }
 }
 

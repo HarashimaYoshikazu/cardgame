@@ -36,7 +36,11 @@ public class OpponentBehavior : MonoBehaviour
 
     void OnPlayCardEnter()
     {
-        //BattleManager.Instance.Enemy.Hands
+        var cardID = BattleManager.Instance.Enemy.GetCanPlayRandomHandsCardID;
+        if (cardID != -1)
+        {
+            BattleManager.Instance.PlayCard(UnitType.Opponent,cardID);
+        }       
     }
 
     void OnAttackEnter()

@@ -158,8 +158,7 @@ public class BattleManager : Singleton<BattleManager>
         }
         else
         {
-            int rand = Random.Range(0, unit.Deck.Length - 1);
-            int cardID = unit.Deck[rand];
+            int cardID = unit.GetRandomHandsCardID;
             DrawCard(unit, cardID);
         }
     }
@@ -169,6 +168,34 @@ public class BattleManager : Singleton<BattleManager>
         unit.AddHands(cardID);
         unit.RemoveDeck(cardID);
         _battleUIManager.CreateHandsObject(unit.Type, cardID);
+    }
+
+    public void PlayCard(UnitType unitType, int cardID)
+    {
+        UnitData unit = null;
+        BattleCard[] battleCards = null;
+        switch (unitType)
+        {
+            case UnitType.Player:
+                unit = _player;
+                battleCards = _battleUIManager.OwnHandCards;
+                break;
+            case UnitType.Opponent:
+                unit = _enemy;
+                battleCards = _battleUIManager.OpponentHandCards;
+                break;
+        }
+        if (unit == null)
+        {
+            Debug.LogError($"UnitTypeのパラメータが不正な値です。：{unitType}");
+        }
+        else
+        {
+            unit.AddFields(cardID);
+            unit.RemoveHands(cardID);
+            _battleUIManager.AddField(unit.Type,battleCards,cardID);
+            _battleUIManager.RemoveHand(unit.Type, battleCards, cardID);
+        }
     }
 
     //ソロプレイ想定
