@@ -31,6 +31,9 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     [SerializeField, Tooltip("HPを表示するテキストクラス")]
     Text _hpText = null;
 
+    [SerializeField, Tooltip("技を選択するパネル")]
+    SkillPanel _skillPanel = null;
+
     /// <summary>カードのRectTransformクラス</summary>
     RectTransform _rectTransform;
 
@@ -83,6 +86,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
             _rectTransform = GetComponent<RectTransform>();
         }
         _currentPointerObject = BattleManager.Instance.BattleUIManagerInstance.CurrentPointerObject;
+
+        _skillPanel.SetSkillValue(_cardData.SkillValue);
     }
 
     /*

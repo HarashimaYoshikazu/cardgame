@@ -47,7 +47,7 @@ public class CardBaseSO : ScriptableObject
         set { _cost = value; }
 #endif
     }
-    [SerializeField,SerializeReference,Tooltip("‹Z")]
+    [SerializeField,Tooltip("‹Z")]
      List<CardSkill> _skillValue;
     public List<CardSkill> SkillValue
     {
