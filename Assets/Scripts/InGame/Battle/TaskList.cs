@@ -4,9 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public class TaskList<T>
+public class TaskList<T> where T : Enum
 {
-	#region define
 	private class Task
 	{
 		public T TaskType;
@@ -22,9 +21,7 @@ public class TaskList<T>
 			Exit = exit;
 		}
 	}
-	#endregion
 
-	#region field
 	/// <summary> 定義されたタスク </summary>
 	Dictionary<T, Task> _DefineTaskDictionary = new Dictionary<T, Task>();
 	/// <summary> 現在積まれているタスク </summary>
@@ -33,9 +30,7 @@ public class TaskList<T>
 	Task _CurrentTask = null;
 	/// <summary> 現在のIndex番号 </summary>
 	int _CurrentIndex = 0;
-	#endregion
 
-	#region property
 	/// <summary>
 	/// 追加されたタスクがすべて終了しているか
 	/// </summary>
@@ -83,9 +78,7 @@ public class TaskList<T>
 	{
 		get { return _CurrentIndex; }
 	}
-	#endregion
 
-	#region public function
 	/// <summary>
 	/// 毎フレーム呼ばれる処理
 	/// (BehaviourのUpdateで呼ばれる想定)
@@ -186,5 +179,4 @@ public class TaskList<T>
 		_CurrentTaskList.Clear();
 		_CurrentIndex = 0;
 	}
-	#endregion
 }
