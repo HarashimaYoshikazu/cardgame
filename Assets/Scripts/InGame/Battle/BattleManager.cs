@@ -212,6 +212,7 @@ public class BattleManager : Singleton<BattleManager>
         DrawCard(UnitType.Opponent);//ランダムなカードを引く
         Enemy.ChangeMaxMana(_addMana);//マナを増やす
         Enemy.ResetCurrentMana();//マナ回復
+        _opponentBehavior.SelectTasks();
         _isMyTurn = false;
     }
 }

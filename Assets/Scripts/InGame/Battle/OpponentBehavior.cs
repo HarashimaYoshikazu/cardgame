@@ -10,6 +10,11 @@ public class OpponentBehavior : MonoBehaviour
         Attack
     }
     TaskList<TaskEnum> _taskList = new TaskList<TaskEnum>();
+    private List<TaskEnum> _debugCurrentTaskList;
+    private void Update()
+    {
+        _debugCurrentTaskList = _taskList.CurrentTaskTypeList;
+    }
 
     /// <summary>
     /// シーン読み込み時に1度だけ呼ばれる
@@ -29,6 +34,11 @@ public class OpponentBehavior : MonoBehaviour
         _taskList.AddTask(TaskEnum.Attack);
     }
 
+    public void OnUpdate()
+    {
+        _taskList.UpdateTask();
+    }
+
     public bool IsEnd
     {
         get { return _taskList.IsEnd; }
@@ -36,6 +46,7 @@ public class OpponentBehavior : MonoBehaviour
 
     void OnPlayCardEnter()
     {
+        Debug.Log("カード使用");
         var cardID = BattleManager.Instance.Enemy.GetCanPlayRandomHandsCardID;
         if (cardID != -1)
         {

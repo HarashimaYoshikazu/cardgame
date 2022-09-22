@@ -43,6 +43,12 @@ public class TurnCycle : MonoBehaviour
         {
             _stateMachine.Dispatch(EventEnum.OpponentTurnEnd);
         });
+
+        BattleManager.Instance.OpponentBehavior.InitTask();
+    }
+    private void Update()
+    {
+        _stateMachine.Update();
     }
 
     public void ChangeState(EventEnum eventEnum)
@@ -54,6 +60,7 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
+            Debug.Log("MyTurn");
             BattleManager.Instance.PlayerTurnStart();
         }
     }
@@ -62,7 +69,17 @@ public class TurnCycle : MonoBehaviour
     {
         public override void OnEnter(StateMachine<EventEnum>.State prevState)
         {
+            Debug.Log("OpponentTurn");
             BattleManager.Instance.EnemyTurnStart();
+        }
+
+        protected override void OnUpdate()
+        {
+            BattleManager.Instance.OpponentBehavior.OnUpdate();
+            if (BattleManager.Instance.OpponentBehavior.IsEnd)
+            {
+                StateMachine.Dispatch(EventEnum.OpponentTurnEnd);
+            }         
         }
     }
 

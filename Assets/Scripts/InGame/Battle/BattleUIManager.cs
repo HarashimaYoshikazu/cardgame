@@ -160,7 +160,7 @@ public class BattleUIManager : MonoBehaviour
         {
             Debug.LogError($"パラメータの配列に指定のカードが含まれていません。配列：{battleCards}cardID:{cardID}");
         }
-        return cards.Single();
+        return cards.FirstOrDefault();
     }
 
     /// <summary>
