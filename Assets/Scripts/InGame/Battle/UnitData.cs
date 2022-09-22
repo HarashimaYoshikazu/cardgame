@@ -46,10 +46,6 @@ public class UnitData
         _currentHP.Subscribe(x =>
         {
             currenthpText.text = x.ToString();
-            if (x <= 0)
-            {
-                BattleManager.Instance.TurnCycleInstance.ChangeState(TurnCycle.EventEnum.Result);
-            }
             Debug.Log($"Œ»Ý‚ÌHP{x}");
         });
 
@@ -82,6 +78,10 @@ public class UnitData
     public void ChangeCurrentHP(int value)
     {
         _currentHP.Value = Mathf.Clamp(_currentHP.Value + value,0,_maxHP);
+        if (_currentHP.Value <= 0)
+        {
+            BattleManager.Instance.TurnCycleInstance.ChangeState(TurnCycle.EventEnum.Result);
+        }
     }
 
     /// <summary>

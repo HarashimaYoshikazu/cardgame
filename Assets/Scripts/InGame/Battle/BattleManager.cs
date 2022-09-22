@@ -48,10 +48,17 @@ public class BattleManager : Singleton<BattleManager>
         {
             if (!_turnCycleInstance)
             {
-                var go = new GameObject();
-                go.name = "TurnCycle";
-                var tc = go.AddComponent<TurnCycle>();
-                _turnCycleInstance = tc;
+                var tc = GameObject.FindObjectOfType<TurnCycle>();
+                if (tc)
+                {
+                    _turnCycleInstance = tc;
+                }
+                else
+                {
+                    var go = new GameObject();
+                    go.name = "TurnCycle";
+                    _turnCycleInstance = go.AddComponent<TurnCycle>();
+                }
             }
             return _turnCycleInstance;
         }
