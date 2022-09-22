@@ -18,9 +18,11 @@ public class SkillPanel : MonoBehaviour
         for (int i = 0;i< cardSkills.Count; i++)
         {
             _skills[i].gameObject.SetActive(true);
+            var skill = cardSkills[i];
+            Debug.Log(skill.GetAbility);
             _skills[i].GetButton.onClick.AddListener(() =>
             {
-                cardSkills[i].GetAbility.Execute();
+                skill.GetAbility.Execute();
             });
         }
     }

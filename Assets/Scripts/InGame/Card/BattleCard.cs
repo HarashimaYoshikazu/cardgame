@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
-public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler,IDamage
+public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler,IPointerClickHandler,IDamage
 {
     [SerializeField, Tooltip("カードの固有番号")]
     int cardID;
@@ -170,12 +170,19 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     }
 
+    
+
     public void Damage(int value)
     {
         if (_cardState == BattleCardState.InField)
         {
             _cardData.ChangeHP(-value);
         }       
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        _skillPanel.gameObject.SetActive(true);
     }
 
     enum BattleCardState

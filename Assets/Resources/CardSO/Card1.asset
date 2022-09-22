@@ -17,20 +17,16 @@ MonoBehaviour:
   _maxHP: 4
   _cost: 2
   _skillValue:
-  - rid: 7356264313364152320
+  - _ability:
+      rid: 7356264362932174848
+    _targetType: 2
   _element: 0
   _sprite: {fileID: 21300000, guid: 48150d4d3b59c1d4494daa076e3b0128, type: 3}
   _playType: 1
   references:
     version: 2
     RefIds:
-    - rid: 7356264313364152320
-      type: {class: CardSkill, ns: , asm: Assembly-CSharp}
-      data:
-        _ability:
-          rid: 7356264313364152321
-        _targetType: 2
-    - rid: 7356264313364152321
+    - rid: 7356264362932174848
       type: {class: DamageAbility, ns: , asm: Assembly-CSharp}
       data:
         _damage: 0
