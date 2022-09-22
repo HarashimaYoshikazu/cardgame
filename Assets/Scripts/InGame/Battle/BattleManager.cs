@@ -72,13 +72,34 @@ public class BattleManager : Singleton<BattleManager>
         {
             if (!_battleUIManager)
             {
-                var go = new GameObject();
-                go.name = "BattleUIManager";
+                var go = new GameObject("BattleUIManager");
                 _battleUIManager = go.AddComponent<BattleUIManager>();
             }
             return _battleUIManager;
         }
         set { _battleUIManager = value; }
+    }
+
+    OpponentBehavior _opponentBehavior = null;
+    public OpponentBehavior OpponentBehavior
+    {
+        get
+        {
+            if (!_opponentBehavior)
+            {
+                var ob = GameObject.FindObjectOfType<OpponentBehavior>();
+                if (ob)
+                {
+                    _opponentBehavior = ob;
+                }
+                else
+                {
+                    var go = new GameObject("OpponentBehavior");
+                    _opponentBehavior = go.AddComponent<OpponentBehavior>();
+                }
+            }
+            return _opponentBehavior;
+        }
     }
 
     /// <summary>どちらのプレイヤーが先行かのフラグ（デバッグ用）</summary>
@@ -119,7 +140,31 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    private void DrawCard(UnitData unit, int cardID)
+    public void DrawCard(UnitType unitType)
+    {
+        UnitData unit = null;
+        switch (unitType)
+        {
+            case UnitType.Player:
+                unit = _player;
+                break;
+            case UnitType.Opponent:
+                unit = _enemy;
+                break;
+        }
+        if (unit == null)
+        {
+            Debug.LogError($"UnitTypeのパラメータが不正な値です。：{unitType}");
+        }
+        else
+        {
+            int rand = Random.Range(0, unit.Deck.Length - 1);
+            int cardID = unit.Deck[rand];
+            DrawCard(unit, cardID);
+        }
+    }
+
+    public void DrawCard(UnitData unit, int cardID)
     {
         unit.AddHands(cardID);
         unit.RemoveDeck(cardID);
@@ -130,18 +175,14 @@ public class BattleManager : Singleton<BattleManager>
     const int _addMana = 1;
     public void PlayerTurnStart()
     {
-        int rand = Random.Range(0, _player.Deck.Length - 1);
-        int cardID = _player.Deck[rand];
-        DrawCard(_player, cardID);
+        DrawCard(UnitType.Player);
         Player.ChangeMaxMana(_addMana);
         Player.ResetCurrentMana();
         _isMyTurn = true;
     }
     public void EnemyTurnStart()
     {
-        int rand = Random.Range(0, _enemy.Deck.Length - 1);
-        int cardID = _enemy.Deck[rand];
-        DrawCard(_enemy, cardID);//ランダムなカードを引く
+        DrawCard(UnitType.Opponent);//ランダムなカードを引く
         Enemy.ChangeMaxMana(_addMana);//マナを増やす
         Enemy.ResetCurrentMana();//マナ回復
         _isMyTurn = false;
