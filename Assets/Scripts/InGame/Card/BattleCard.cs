@@ -182,7 +182,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _skillPanel.gameObject.SetActive(true);
+        _skillPanel.gameObject.SetActive(!_skillPanel.gameObject.activeSelf);
     }
 
     enum BattleCardState
