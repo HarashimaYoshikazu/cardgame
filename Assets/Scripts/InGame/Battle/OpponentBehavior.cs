@@ -21,8 +21,8 @@ public class OpponentBehavior : MonoBehaviour
     /// </summary>
     public void InitTask()
     {
-        _taskList.DefineTask(TaskEnum.PlayCard, OnPlayCardEnter, DoNothingUpdate, DoNothing);
-        _taskList.DefineTask(TaskEnum.Attack, OnAttackEnter, DoNothingUpdate, DoNothing);
+        _taskList.DefineTask(TaskEnum.PlayCard, OnPlayCardEnter,OnPlayCardExit);
+        _taskList.DefineTask(TaskEnum.Attack, OnAttackEnter,OnAttackExit);
     }
 
     /// <summary>
@@ -54,18 +54,14 @@ public class OpponentBehavior : MonoBehaviour
         }       
     }
 
+    void OnPlayCardExit() { }
+
     void OnAttackEnter()
     {
 
     }
-
-    void DoNothing()
+    void OnAttackExit()
     {
 
-    }
-
-    bool DoNothingUpdate()
-    {
-        return true;
     }
 }

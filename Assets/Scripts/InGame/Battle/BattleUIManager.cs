@@ -147,10 +147,10 @@ public class BattleUIManager : MonoBehaviour
         _turnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(700, 0, 0);
 
         //敵のターン終了ボタン（デバッグ用）
-        _debugOpponentTurnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
-        _debugOpponentTurnEndButton.transform.SetAsLastSibling();
-        _debugOpponentTurnEndButton.GetComponentInChildren<Text>().text = "敵ターン終了";
-        _debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(-700, 0, 0);
+        //_debugOpponentTurnEndButton = Instantiate(Resources.Load<Button>("UIPrefabs/Button"), _canvas.transform);
+        //_debugOpponentTurnEndButton.transform.SetAsLastSibling();
+        //_debugOpponentTurnEndButton.GetComponentInChildren<Text>().text = "敵ターン終了";
+        //_debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(-700, 0, 0);
     }
 
     BattleCard ConvertCard(BattleCard[] battleCards, int cardID)
@@ -221,6 +221,7 @@ public class BattleUIManager : MonoBehaviour
 
     public void AddField(UnitType unitType, BattleCard card)
     {
+        card.ChangeCardState(BattleCardState.InField);
         switch (unitType)
         {
             case UnitType.Player:

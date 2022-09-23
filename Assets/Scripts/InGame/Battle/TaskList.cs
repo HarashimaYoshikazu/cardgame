@@ -148,6 +148,11 @@ public class TaskList<T> where T : Enum
 		_DefineTaskDictionary.Add(t, task);
 	}
 
+	public void DefineTask(T t, Action enter,Action exit)
+	{
+		DefineTask(t,enter,()=>true,exit);
+	}
+
 	/// <summary>
 	/// ƒ^ƒXƒN‚Ì“o˜^
 	/// </summary>

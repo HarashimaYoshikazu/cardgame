@@ -39,7 +39,6 @@ public class GameCycle : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneChange;
     }
 
-    //FIXME　ifで統合できる
     void OnSceneChange(Scene nextScene, LoadSceneMode mode)
     {
         switch (_gameState.CurrentState)
@@ -87,11 +86,6 @@ public class GameCycle : MonoBehaviour
             Debug.Log($"HomeState。現在のシーン{SceneManager.GetActiveScene().name}");
             HomeManager.Instance.DeckCustomUIManager.SetUpUIObject();
         }
-
-        protected override void OnExit(StateMachine<GameStateEvent>.State nextState)
-        {
-            
-        }
     }
 
     class BattleScene : StateMachine<GameStateEvent>.State
@@ -99,11 +93,6 @@ public class GameCycle : MonoBehaviour
         public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
         {
             Debug.Log($"バトルState。現在のシーン{SceneManager.GetActiveScene().name}");            
-        }
-
-        protected override void OnExit(StateMachine<GameStateEvent>.State nextState)
-        {
-            
         }
     }
     class Empty : StateMachine<GameStateEvent>.State

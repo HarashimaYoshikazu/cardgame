@@ -44,6 +44,10 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     GameObject _currentPointerObject = null;
 
     BattleCardState _cardState = BattleCardState.InHand;
+    public void ChangeCardState(BattleCardState battleCardState)
+    {
+        _cardState = battleCardState;
+    }
 
     UnitType _owner;
     /// <summary>このカードの所有者</summary>
@@ -175,7 +179,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     {
         if (_cardState == BattleCardState.InField)
         {
-            _cardData.ChangeHP(-value);
+            _cardData.ChangeHP(value);
         }       
     }
 
@@ -183,10 +187,9 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     {
         _skillPanel.gameObject.SetActive(!_skillPanel.gameObject.activeSelf);
     }
-
-    enum BattleCardState
-    {
-        InHand,
-        InField
-    }
+}
+public enum BattleCardState
+{
+    InHand,
+    InField
 }
