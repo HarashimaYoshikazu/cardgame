@@ -7,15 +7,15 @@ using UnityEngine;
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 public class SubclassSelectorAttribute : PropertyAttribute
 {
-	bool m_includeMono;
+	bool _includeMono;
 
 	public SubclassSelectorAttribute(bool includeMono = false)
 	{
-		m_includeMono = includeMono;
+		_includeMono = includeMono;
 	}
 
 	public bool IsIncludeMono()
 	{
-		return m_includeMono;
+		return _includeMono;
 	}
 }

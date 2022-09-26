@@ -23,20 +23,20 @@ public class TaskList<T> where T : Enum
 	}
 
 	/// <summary> 定義されたタスク </summary>
-	Dictionary<T, Task> _DefineTaskDictionary = new Dictionary<T, Task>();
+	Dictionary<T, Task> _defineTaskDictionary = new Dictionary<T, Task>();
 	/// <summary> 現在積まれているタスク </summary>
-	List<Task> _CurrentTaskList = new List<Task>();
+	List<Task> _currentTaskList = new List<Task>();
 	/// <summary> 現在動作しているタスク </summary>
-	Task _CurrentTask = null;
+	Task _currentTask = null;
 	/// <summary> 現在のIndex番号 </summary>
-	int _CurrentIndex = 0;
+	int _currentIndex = 0;
 
 	/// <summary>
 	/// 追加されたタスクがすべて終了しているか
 	/// </summary>
 	public bool IsEnd
 	{
-		get { return _CurrentTaskList.Count <= _CurrentIndex; }
+		get { return _currentTaskList.Count <= _currentIndex; }
 	}
 
 	/// <summary>
@@ -44,7 +44,7 @@ public class TaskList<T> where T : Enum
 	/// </summary>
 	public bool IsMoveTask
 	{
-		get { return _CurrentTask != null; }
+		get { return _currentTask != null; }
 	}
 
 	/// <summary>
@@ -54,9 +54,9 @@ public class TaskList<T> where T : Enum
 	{
 		get
 		{
-			if (_CurrentTask == null)
+			if (_currentTask == null)
 				return default(T);
-			return _CurrentTask.TaskType;
+			return _currentTask.TaskType;
 		}
 	}
 
@@ -67,7 +67,7 @@ public class TaskList<T> where T : Enum
 	{
 		get
 		{
-			return _CurrentTaskList.Select(x => x.TaskType).ToList();
+			return _currentTaskList.Select(x => x.TaskType).ToList();
 		}
 	}
 
@@ -76,7 +76,7 @@ public class TaskList<T> where T : Enum
 	/// </summary>
 	public int CurrentIndex
 	{
-		get { return _CurrentIndex; }
+		get { return _currentIndex; }
 	}
 
 	/// <summary>
@@ -92,38 +92,38 @@ public class TaskList<T> where T : Enum
 		}
 
 		// 現在のタスクがなければ、タスクを取得する
-		if (_CurrentTask == null)
+		if (_currentTask == null)
 		{
-			_CurrentTask = _CurrentTaskList[_CurrentIndex];
+			_currentTask = _currentTaskList[_currentIndex];
 			// Enterを呼ぶ
-			_CurrentTask.Enter?.Invoke();
+			_currentTask.Enter?.Invoke();
 		}
 
 		// タスクのUpdateを呼ぶ
-		var isEndOneTask = _CurrentTask.Update();
+		var isEndOneTask = _currentTask.Update();
 
 		// タスクが終了していれば次の処理を呼ぶ
 		if (isEndOneTask)
 		{
 			// 現在のタスクのExitを呼ぶ
-			_CurrentTask?.Exit();
+			_currentTask?.Exit();
 
 			// Index追加
-			_CurrentIndex++;
+			_currentIndex++;
 
 			// タスクがなければクリアする
 			if (IsEnd)
 			{
-				_CurrentIndex = 0;
-				_CurrentTask = null;
-				_CurrentTaskList.Clear();
+				_currentIndex = 0;
+				_currentTask = null;
+				_currentTaskList.Clear();
 				return;
 			}
 
 			// 次のタスクを取得する
-			_CurrentTask = _CurrentTaskList[_CurrentIndex];
+			_currentTask = _currentTaskList[_currentIndex];
 			// 次のタスクのEnterを呼ぶ
-			_CurrentTask?.Enter();
+			_currentTask?.Enter();
 		}
 	}
 
@@ -137,7 +137,7 @@ public class TaskList<T> where T : Enum
 	public void DefineTask(T t, Action enter, Func<bool> update, Action exit)
 	{
 		var task = new Task(t, enter, update, exit);
-		var exist = _DefineTaskDictionary.ContainsKey(t);
+		var exist = _defineTaskDictionary.ContainsKey(t);
 		if (exist)
 		{
 #if UNITY_EDITOR
@@ -145,7 +145,7 @@ public class TaskList<T> where T : Enum
 #endif
 			return;
 		}
-		_DefineTaskDictionary.Add(t, task);
+		_defineTaskDictionary.Add(t, task);
 	}
 
 	public void DefineTask(T t, Action enter,Action exit)
@@ -160,7 +160,7 @@ public class TaskList<T> where T : Enum
 	public void AddTask(T t)
 	{
 		Task task = null;
-		var exist = _DefineTaskDictionary.TryGetValue(t, out task);
+		var exist = _defineTaskDictionary.TryGetValue(t, out task);
 		if (exist == false)
 		{
 #if UNITY_EDITOR
@@ -168,7 +168,7 @@ public class TaskList<T> where T : Enum
 #endif
 			return;
 		}
-		_CurrentTaskList.Add(task);
+		_currentTaskList.Add(task);
 	}
 
 	/// <summary>
@@ -176,12 +176,12 @@ public class TaskList<T> where T : Enum
 	/// </summary>
 	public void ForceStop()
 	{
-		if (_CurrentTask != null)
+		if (_currentTask != null)
 		{
-			_CurrentTask.Exit();
+			_currentTask.Exit();
 		}
-		_CurrentTask = null;
-		_CurrentTaskList.Clear();
-		_CurrentIndex = 0;
+		_currentTask = null;
+		_currentTaskList.Clear();
+		_currentIndex = 0;
 	}
 }
