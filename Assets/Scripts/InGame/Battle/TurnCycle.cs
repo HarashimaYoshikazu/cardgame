@@ -13,13 +13,13 @@ public class TurnCycle : MonoBehaviour
         OpponentTurnEnd,
         Result
     }
-    StateMachine<EventEnum> _stateMachine = null;
+    StateMachine<EventEnum, TurnCycle> _stateMachine = null;
 
     void Awake()
     {
         BattleManager.Instance.Init();
 
-        _stateMachine = new StateMachine<EventEnum>();
+        _stateMachine = new StateMachine<EventEnum,TurnCycle>(this);
 
         _stateMachine.AddTransition<MyTurn, OpponentTurn>(EventEnum.MyTurnEnd);
         _stateMachine.AddTransition<OpponentTurn,MyTurn >(EventEnum.OpponentTurnEnd);
@@ -56,18 +56,18 @@ public class TurnCycle : MonoBehaviour
         _stateMachine.Dispatch(eventEnum);
     }
 
-    class MyTurn :StateMachine<EventEnum>.State
+    class MyTurn :StateMachine<EventEnum, TurnCycle>.State
     {
-        public override void OnEnter(StateMachine<EventEnum>.State prevState)
+        protected override void OnEnter(StateMachine<EventEnum, TurnCycle>.State prevState)
         {
             Debug.Log("MyTurn");
             BattleManager.Instance.PlayerTurnStart();
         }
     }
 
-    class OpponentTurn : StateMachine<EventEnum>.State
+    class OpponentTurn : StateMachine<EventEnum, TurnCycle>.State
     {
-        public override void OnEnter(StateMachine<EventEnum>.State prevState)
+        protected override void OnEnter(StateMachine<EventEnum, TurnCycle>.State prevState)
         {
             Debug.Log("OpponentTurn");
             BattleManager.Instance.EnemyTurnStart();
@@ -83,9 +83,9 @@ public class TurnCycle : MonoBehaviour
         }
     }
 
-    class EndState : StateMachine<EventEnum>.State
+    class EndState : StateMachine<EventEnum, TurnCycle>.State
     {
-        public override void OnEnter(StateMachine<EventEnum>.State prevState)
+        protected override void OnEnter(StateMachine<EventEnum, TurnCycle>.State prevState)
         {
             Debug.Log("èIóπ");
         }

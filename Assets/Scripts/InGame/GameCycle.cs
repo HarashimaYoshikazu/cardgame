@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameCycle : MonoBehaviour
 {
+    [SerializeField]
+    string _titleSceneName = "Title";
+    [SerializeField]
+    string _homeSceneName = "Home";
+    [SerializeField]
+    string _battleSceneName = "Battle";
     //ゲームの状態管理
 
     enum GameStateEvent
@@ -13,9 +19,11 @@ public class GameCycle : MonoBehaviour
         GoHome,
     }
 
-    StateMachine<GameStateEvent> _gameState = new StateMachine<GameStateEvent>();
+    StateMachine<GameStateEvent,GameCycle> _gameState ;
     private void Awake()
     {
+        _gameState = new StateMachine<GameStateEvent, GameCycle>(this);
+
         if (GameManager.Instance.GameCycle)
         {
             Destroy(gameObject);
@@ -23,80 +31,124 @@ public class GameCycle : MonoBehaviour
         }
         GameManager.Instance.GameCycle = this;
 
-        //初期化遷移
-        _gameState.AddTransition<Empty, HomeScene>(GameStateEvent.GoHome);
-        _gameState.AddTransition<Empty, BattleScene>(GameStateEvent.GoBattle);
-
-        //ゲーム内遷移
-        _gameState.AddTransition<TitleScene, HomeScene>(GameStateEvent.GoHome);
+        //ゲーム内遷移を定義
         _gameState.AddTransition<HomeScene, BattleScene>(GameStateEvent.GoBattle);
-        _gameState.AddTransition<BattleScene, HomeScene>(GameStateEvent.GoHome);
+        _gameState.AddAnyTransitionTo<HomeScene>(GameStateEvent.GoHome);
 
-        _gameState.StartSetUp<Empty>();
+        //Stateを初期化
+        SetUpStartState(SceneManager.GetActiveScene().name);     
         
         DontDestroyOnLoad(gameObject);
-
-        SceneManager.sceneLoaded += OnSceneChange;
     }
 
-    void OnSceneChange(Scene nextScene, LoadSceneMode mode)
+    void SetUpStartState(string sceneName)
     {
-        switch (_gameState.CurrentState)
+        if (sceneName == _titleSceneName)
         {
-            case Empty:
-                if (SceneManager.GetActiveScene().name =="Home")
-                {
-                    _gameState.Dispatch(GameStateEvent.GoHome);
-                }
-                else if (SceneManager.GetActiveScene().name == "Battle")
-                {
-                    _gameState.Dispatch(GameStateEvent.GoBattle);
-                }
-                break;
-            case HomeScene:
-                _gameState.Dispatch(GameStateEvent.GoBattle);
-                break;
-
-            case BattleScene:
-                _gameState.Dispatch(GameStateEvent.GoHome);
-                break;
+            _gameState.StartSetUp<TitleScene>();
         }
-
+        else if (sceneName == _homeSceneName)
+        {
+            _gameState.StartSetUp<HomeScene>();
+        }
+        else if(sceneName == _battleSceneName)
+        {
+            _gameState.StartSetUp<BattleScene>();
+        }
     }
 
     public void GoBattle()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Battle");
+        _gameState.Dispatch(GameStateEvent.GoBattle);
     }
 
     public void GoHome()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+        _gameState.Dispatch(GameStateEvent.GoHome);
     }
 
-    class TitleScene : StateMachine<GameStateEvent>.State
+    class TitleScene : GameCycleStateBase
     {
+        protected override void OnGameCycleEnter(GameCycleStateBase prevState)
+        {
+            Debug.Log($"TitleState。現在のシーン{SceneManager.GetActiveScene().name}");
+        }
 
+        protected override void OnGameCycleExit(GameCycleStateBase prevState)
+        {
+            SceneManager.LoadScene(prevState.GetSceneName());
+        }
+
+        public override string GetSceneName()
+        {
+            return _stateMachine.Owner._titleSceneName;
+        }
     }
 
-    class HomeScene : StateMachine<GameStateEvent>.State
+    class HomeScene : GameCycleStateBase
     {
-        public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
+        protected override void OnGameCycleEnter(GameCycleStateBase prevState)
         {
             Debug.Log($"HomeState。現在のシーン{SceneManager.GetActiveScene().name}");
             HomeManager.Instance.DeckCustomUIManager.SetUpUIObject();
         }
-    }
 
-    class BattleScene : StateMachine<GameStateEvent>.State
-    {
-        public override void OnEnter(StateMachine<GameStateEvent>.State prevState)
+        protected override void OnGameCycleExit(GameCycleStateBase prevState)
         {
-            Debug.Log($"バトルState。現在のシーン{SceneManager.GetActiveScene().name}");            
+            SceneManager.LoadScene(prevState.GetSceneName());
+        }
+
+        public override string GetSceneName()
+        {
+            return _stateMachine.Owner._homeSceneName;
         }
     }
-    class Empty : StateMachine<GameStateEvent>.State
-    {
 
+    class BattleScene : GameCycleStateBase
+    {
+        protected override void OnGameCycleEnter(GameCycleStateBase prevState)
+        {
+            Debug.Log($"BattleState。現在のシーン{SceneManager.GetActiveScene().name}");
+        }
+
+        protected override void OnGameCycleExit(GameCycleStateBase prevState)
+        {
+            SceneManager.LoadScene(prevState.GetSceneName());
+        }
+
+        public override string GetSceneName()
+        {
+            return _stateMachine.Owner._battleSceneName;
+        }
+    }
+
+    abstract class GameCycleStateBase   : StateMachine<GameStateEvent, GameCycle>.State
+    {
+        public abstract string GetSceneName();
+
+        protected abstract void OnGameCycleEnter(GameCycleStateBase prevState);
+        protected abstract void OnGameCycleExit(GameCycleStateBase prevState);
+
+        protected override void OnEnter(StateMachine<GameStateEvent, GameCycle>.State prevState)
+        {
+            OnGameCycleEnter(GetCycleStateBase(prevState));
+        }
+        protected override void OnExit(StateMachine<GameStateEvent, GameCycle>.State nextState)
+        {
+            OnGameCycleExit(GetCycleStateBase(nextState));
+        }
+
+        GameCycleStateBase GetCycleStateBase(StateMachine<GameStateEvent, GameCycle>.State state)
+        {
+            if (state is GameCycleStateBase)
+            {
+                var caststate = (GameCycleStateBase)state;
+                return caststate;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

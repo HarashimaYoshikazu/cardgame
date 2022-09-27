@@ -4,24 +4,30 @@ using System;
 /// <summary>
 /// StateMachineクラス
 /// </summary>
-public class StateMachine<Event> where Event : System.Enum
+public class StateMachine<Event, Towner> where Event : System.Enum
 {
+    Towner _owner = default;
+    public Towner Owner => _owner;
+    public StateMachine(Towner towner)
+    {
+        _owner = towner;
+    }
+
     /// <summary>
     /// ステートを表すクラス
     /// </summary>
     public abstract class State
     {
-        protected StateMachine<Event> StateMachine => stateMachine;
-        public StateMachine<Event> stateMachine;
+        protected StateMachine<Event, Towner> StateMachine => _stateMachine;
+        public StateMachine<Event, Towner> _stateMachine;
 
         public Dictionary<Event, State> transitions = new Dictionary<Event, State>();
-
 
         public void Enter(State prevState)
         {
             OnEnter(prevState);
         }
-        public virtual void OnEnter(State prevState) { }
+        protected virtual void OnEnter(State prevState) { }
 
 
         public void Update()
@@ -56,7 +62,7 @@ public class StateMachine<Event> where Event : System.Enum
     public T Add<T>() where T : State, new()
     {
         var state = new T();
-        state.stateMachine = this;
+        state._stateMachine = this;
         states.AddLast(state);
         return state;
     }
