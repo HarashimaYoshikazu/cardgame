@@ -115,6 +115,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void Init()
     {
+        BattleUIManagerInstance.SetUpUI();
         if (GameManager.Instance.DeckCards.Length == 0)
         {
             for (int i = 0; i < GameManager.Instance.CardLimit; i++)
@@ -127,7 +128,7 @@ public class BattleManager : Singleton<BattleManager>
         int[] enemyDeck = GameManager.Instance.DeckCards;
         _enemy = new UnitData(20, BattleUIManagerInstance.OpponentHPText, BattleUIManagerInstance.OpponentCurrentManaText, BattleUIManagerInstance.OpponentMaxManaText, enemyDeck, UnitType.Opponent);
         DistributeHands(_player);
-        DistributeHands(_enemy);
+        DistributeHands(_enemy);    
     }
 
     void DistributeHands(UnitData unit)
@@ -158,8 +159,11 @@ public class BattleManager : Singleton<BattleManager>
         }
         else
         {
-            int cardID = unit.GetRandomHandsCardID;
-            DrawCard(unit, cardID);
+            int cardID = unit.GetRandomDeckCardID;
+            if (cardID != -1)
+            {
+                DrawCard(unit, cardID);
+            }        
         }
     }
 

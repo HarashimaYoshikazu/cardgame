@@ -92,11 +92,6 @@ public class BattleUIManager : MonoBehaviour
     Button _debugOpponentTurnEndButton = null;
     public Button DebugOpponentTurnEndButton => _debugOpponentTurnEndButton;
 
-    private void Awake()
-    {
-        SetUpUI();
-    }
-
     /// <summary>
     /// Battleシーンで使うUIオブジェクトを生成
     /// </summary>
