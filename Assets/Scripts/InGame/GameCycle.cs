@@ -67,6 +67,10 @@ public class GameCycle : MonoBehaviour
         _gameState.Dispatch(GameStateEvent.GoHome);
     }
 
+    private void Update()
+    {
+        _gameState.Update();
+    }
     class TitleScene : GameCycleStateBase
     {
         protected override void OnGameCycleEnter(GameCycleStateBase prevState)
@@ -74,9 +78,9 @@ public class GameCycle : MonoBehaviour
             Debug.Log($"TitleState。現在のシーン{SceneManager.GetActiveScene().name}");
         }
 
-        protected override void OnGameCycleExit(GameCycleStateBase prevState)
+        protected override void OnGameCycleExit(GameCycleStateBase nextState)
         {
-            SceneManager.LoadScene(prevState.GetSceneName());
+
         }
 
         public override string GetSceneName()
@@ -95,7 +99,7 @@ public class GameCycle : MonoBehaviour
 
         protected override void OnGameCycleExit(GameCycleStateBase prevState)
         {
-            SceneManager.LoadScene(prevState.GetSceneName());
+            
         }
 
         public override string GetSceneName()
@@ -111,9 +115,14 @@ public class GameCycle : MonoBehaviour
             Debug.Log($"BattleState。現在のシーン{SceneManager.GetActiveScene().name}");
         }
 
+        protected override void OnUpdate()
+        {
+            
+        }
+
         protected override void OnGameCycleExit(GameCycleStateBase prevState)
         {
-            SceneManager.LoadScene(prevState.GetSceneName());
+            
         }
 
         public override string GetSceneName()
@@ -135,7 +144,13 @@ public class GameCycle : MonoBehaviour
         }
         protected override void OnExit(StateMachine<GameStateEvent, GameCycle>.State nextState)
         {
-            OnGameCycleExit(GetCycleStateBase(nextState));
+            var nextBase = GetCycleStateBase(nextState);
+            if (nextBase != null)
+            {
+                SceneManager.LoadSceneAsync(nextBase.GetSceneName());
+                Debug.Log($"現在のシーン{SceneManager.GetActiveScene().name}");
+            }
+            OnGameCycleExit(nextBase);
         }
 
         GameCycleStateBase GetCycleStateBase(StateMachine<GameStateEvent, GameCycle>.State state)
