@@ -23,7 +23,7 @@ public class UnitData
     List<int> _deck = new List<int>();
     public int[] Deck => _deck.ToArray();
     public void AddDeck(int cardID) { _deck.Add(cardID); }
-    public void RemoveDeck(int cardID) { if (_deck.Count > 0 && _deck.Contains(cardID)) { Debug.Log(cardID); _deck.Remove(cardID); }  }
+    public void RemoveDeck(int cardID) { if (_deck.Count > 0 && _deck.Contains(cardID)) {_deck.Remove(cardID); }  }
 
     /// <summary>ŽèŽD</summary>
     List<int> _hands = new List<int>();

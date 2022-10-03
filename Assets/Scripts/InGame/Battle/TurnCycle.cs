@@ -71,11 +71,7 @@ public class TurnCycle : MonoBehaviour
 
         protected override void OnUpdate()
         {
-            BattleManager.Instance.OpponentBehavior.OnUpdate();
-            if (BattleManager.Instance.OpponentBehavior.IsEnd)
-            {
-                StateMachine.Dispatch(EventEnum.OpponentTurnEnd);
-            }         
+            BattleManager.Instance.OpponentBehavior.OnUpdate();       
         }
     }
 
