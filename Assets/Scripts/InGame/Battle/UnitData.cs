@@ -23,18 +23,22 @@ public class UnitData
     List<int> _deck = new List<int>();
     public int[] Deck => _deck.ToArray();
     public void AddDeck(int cardID) { _deck.Add(cardID); }
-    public void RemoveDeck(int cardID) { _deck.RemoveAt(cardID); }
+    public void RemoveDeck(int cardID) { if (_deck.Count > 0 && _deck.Contains(cardID)) { Debug.Log(cardID); _deck.Remove(cardID); }  }
 
     /// <summary>ŽèŽD</summary>
     List<int> _hands = new List<int>();
     public int[] Hands => _hands.ToArray();
     public void AddHands(int cardID) { _hands.Add(cardID); }
     public void RemoveHands(int cardID) { _hands.Remove(cardID); }
-    public int GetRandomHandsCardID
+    public int GetRandomDeckCardID
     {
         get
         {
-            int rand = Random.Range(0, _deck.Count - 1);
+            if (_deck.Count <= 0)
+            {
+                return -1;
+            }
+            int rand = Random.Range(0, _deck.Count);
             int cardID = _deck[rand];
             return cardID;
         }
@@ -48,8 +52,8 @@ public class UnitData
             {
                 return -1;
             }
-            int rand = Random.Range(0, hands.Count - 1);
-            int cardID = _deck[rand];
+            int rand = Random.Range(0, hands.Count);
+            int cardID = hands[rand];
             return cardID;
         }
     }
