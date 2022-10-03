@@ -81,13 +81,11 @@ public class StateMachine<Event, Towner> where Event : System.Enum
         return Add<T>();
     }
 
-
     /// <param name="eventId">ƒCƒxƒ“ƒgID</param>
     public void AddTransition<TFrom, TTo>(Event eventId)
         where TFrom : State, new()
         where TTo : State, new()
     {
-
         var from = GetOrAddState<TFrom>();
         if (from.transitions.ContainsKey(eventId))
         {

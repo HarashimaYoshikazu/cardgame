@@ -15,6 +15,7 @@ public class GameCycle : MonoBehaviour
 
     enum GameStateEvent
     {
+        GoTitle,
         GoBattle,
         GoHome,
     }
@@ -35,9 +36,7 @@ public class GameCycle : MonoBehaviour
         _gameState.AddTransition<HomeScene, BattleScene>(GameStateEvent.GoBattle);
         _gameState.AddAnyTransitionTo<HomeScene>(GameStateEvent.GoHome);
 
-        //StateÇèâä˙âª
-        SetUpStartState(SceneManager.GetActiveScene().name);     
-        
+        SceneManager.sceneLoaded += OnSceneLoad;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -45,26 +44,52 @@ public class GameCycle : MonoBehaviour
     {
         if (sceneName == _titleSceneName)
         {
-            _gameState.StartSetUp<TitleScene>();
+            if (_gameState.CurrentState == null)
+            {
+                _gameState.StartSetUp<TitleScene>();
+            }
+            else
+            {
+                _gameState.Dispatch(GameStateEvent.GoTitle);
+            }
         }
         else if (sceneName == _homeSceneName)
         {
-            _gameState.StartSetUp<HomeScene>();
+            if (_gameState.CurrentState == null)
+            {
+                _gameState.StartSetUp<HomeScene>();
+            }
+            else
+            {
+                _gameState.Dispatch(GameStateEvent.GoHome);
+            }            
         }
         else if(sceneName == _battleSceneName)
         {
-            _gameState.StartSetUp<BattleScene>();
+            if (_gameState.CurrentState == null)
+            {
+                _gameState.StartSetUp<BattleScene>();
+            }
+            else
+            {
+                _gameState.Dispatch(GameStateEvent.GoBattle);
+            }           
         }
     }
 
     public void GoBattle()
     {
-        _gameState.Dispatch(GameStateEvent.GoBattle);
+        SceneManager.LoadScene(_battleSceneName);
     }
 
     public void GoHome()
     {
-        _gameState.Dispatch(GameStateEvent.GoHome);
+        SceneManager.LoadScene(_homeSceneName);
+    }
+
+    void OnSceneLoad(Scene scene,LoadSceneMode sceneMode)
+    {
+        SetUpStartState(scene.name);
     }
 
     private void Update()
@@ -144,13 +169,7 @@ public class GameCycle : MonoBehaviour
         }
         protected override void OnExit(StateMachine<GameStateEvent, GameCycle>.State nextState)
         {
-            var nextBase = GetCycleStateBase(nextState);
-            if (nextBase != null)
-            {
-                SceneManager.LoadSceneAsync(nextBase.GetSceneName());
-                Debug.Log($"åªç›ÇÃÉVÅ[Éì{SceneManager.GetActiveScene().name}");
-            }
-            OnGameCycleExit(nextBase);
+            OnGameCycleExit(GetCycleStateBase(nextState));
         }
 
         GameCycleStateBase GetCycleStateBase(StateMachine<GameStateEvent, GameCycle>.State state)
