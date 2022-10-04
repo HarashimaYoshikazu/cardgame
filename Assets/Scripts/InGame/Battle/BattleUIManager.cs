@@ -73,7 +73,7 @@ public class BattleUIManager : MonoBehaviour
 
     GameObject _ownPlayerDataPanel = null;
     public GameObject OwnPlayerDataPanel => _ownPlayerDataPanel;
-        UnitView _ownPlayerView = null;
+    UnitView _ownPlayerView = null;
     public UnitView OwnPlayerView => _opponentPlayerView;
     Text _ownHPText = null;
     public Text OwnHPText => _ownHPText;
@@ -111,7 +111,7 @@ public class BattleUIManager : MonoBehaviour
 
         //ìGèÓïÒ
         _opponentPlayerDataPanel = Instantiate(Resources.Load<GameObject>("UIPrefabs/Battle/opponentPlayerView"), _canvas.transform);
-        _opponentPlayerView = UnitView.Instantiate(Resources.Load<UnitView>("UIPrefabs/Battle/UnitObject"), _opponentPlayerDataPanel.transform,UnitType.Opponent);
+        _opponentPlayerView = UnitView.Instantiate(Resources.Load<UnitView>("UIPrefabs/Battle/UnitObject"), _opponentPlayerDataPanel.transform, UnitType.Opponent);
         _opponentHPText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerView.transform);
         _opponentCurrentManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerDataPanel.transform);
         _opponentMaxManaText = Instantiate(Resources.Load<Text>("UIPrefabs/Battle/TextObject"), _opponentPlayerDataPanel.transform);
@@ -166,28 +166,19 @@ public class BattleUIManager : MonoBehaviour
     {
         var battleCardPrefab = Resources.Load<BattleCard>($"CardPrefab/Battle/Card{cardID}");
         BattleCard battleCard = null;
-        switch (unitType)
-        {
-            case UnitType.Player:
-                battleCard = Instantiate(battleCardPrefab, _ownHands.transform);
-                AddHand(UnitType.Player,battleCard);
-                battleCard.OwnerType = UnitType.Player; //ç°ÇÕíºê⁄ë„ì¸ÇµÇƒÇÈ
-                break;
-            case UnitType.Opponent:
-                battleCard = Instantiate(battleCardPrefab, _opponentHands.transform);
-                AddHand(UnitType.Opponent, battleCard);
-                battleCard.OwnerType = UnitType.Opponent;
-                break;
-        }  
+        battleCard = Instantiate(battleCardPrefab);
+        AddHand(unitType, battleCard);
+        battleCard.OwnerType = unitType;
     }
 
-    public void AddHand(UnitType unitType,BattleCard card)
+    public void AddHand(UnitType unitType, BattleCard card)
     {
         switch (unitType)
         {
             case UnitType.Player:
                 _ownHandCards.Add(card);
                 card.transform.SetParent(_ownHands.transform);
+                card.gameObject.AddComponent<BattleCardEvent>();
                 break;
             case UnitType.Opponent:
                 _opponentHandCards.Add(card);
@@ -232,8 +223,8 @@ public class BattleUIManager : MonoBehaviour
 
     public void AddField(UnitType unitType, BattleCard[] battleCards, int cardID)
     {
-        var card = ConvertCard(battleCards,cardID);
-        AddField(unitType,card);
+        var card = ConvertCard(battleCards, cardID);
+        AddField(unitType, card);
     }
 
     public void RemoveField(UnitType unitType, BattleCard card)

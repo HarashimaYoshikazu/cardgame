@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
-public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler, IPointerClickHandler, IDamage
+public class BattleCard : MonoBehaviour, IDamage
 {
     [SerializeField, Tooltip("カードの固有番号")]
     int cardID;
@@ -40,8 +40,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
     /// <summary>カードの情報を格納したクラスのインスタンス</summary>
     CardData _cardData;
 
-    /// <summary>キャッシュ用の変数</summary>
-    GameObject _currentPointerObject = null;
     BattleCardState _cardState = BattleCardState.InHand;
     public void ChangeCardState(BattleCardState battleCardState)
     {
@@ -92,17 +90,8 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         _skillPanel.SetSkillValue(_cardData.SkillValue);
     }
 
-    /*
-    以下EventSystemsのインターフェイスの関数
-    */
-    public void OnBeginDrag(PointerEventData eventData)
+    public void OnBeginDrag()
     {
-        //今はオーナーをPlayerで固定してる
-        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
-        {
-            return;
-        }
-
         switch (_cardState)
         {
             case BattleCardState.InField:
@@ -117,43 +106,31 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         }
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag(Vector2 pos)
     {
-        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
-        {
-            return;
-        }
-        //現在ポインター上にあるオブジェクトを検知して代入
-        _currentPointerObject = eventData.pointerCurrentRaycast.gameObject;
         switch (_cardState)
         {
             case BattleCardState.InField:
-
                 break;
             case BattleCardState.InHand:
                 //ドラッグ中はポインターに追従
-                _rectTransform.position = eventData.position;
+                _rectTransform.position = pos;
                 break;
         }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerUp(GameObject target)
     {
-        if (!BattleManager.Instance.IsMyTurn || _owner != UnitType.Player)
-        {
-            return;
-        }
-
         switch (_cardState)
         {
             case BattleCardState.InField:
-                Attack(_currentPointerObject);
+                Attack(target);
                 break;
             case BattleCardState.InHand:
                 //自分のフィールドオブジェクトだったら子オブジェクトにする
-                if (_currentPointerObject == BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
+                if (target == BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
                 {
-                    PlayCard(BattleManager.Instance.Player, _currentPointerObject.transform);
+                    PlayCard(BattleManager.Instance.Player, target.transform);
                 }
                 else
                 {
