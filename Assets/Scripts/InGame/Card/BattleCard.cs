@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
-public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler,IPointerClickHandler,IDamage
+public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBeginDragHandler, IPointerClickHandler, IDamage
 {
     [SerializeField, Tooltip("カードの固有番号")]
     int cardID;
@@ -143,42 +143,57 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             return;
         }
-        
+
         switch (_cardState)
         {
             case BattleCardState.InField:
-                if (_currentPointerObject.TryGetComponent(out IDamage damage))
-                {
-                    damage.Damage(-_cardData.Attack);
-                    Debug.Log($"damege{_currentPointerObject}");
-                }
+                Attack(_currentPointerObject);
                 break;
             case BattleCardState.InHand:
                 //自分のフィールドオブジェクトだったら子オブジェクトにする
-                if (_currentPointerObject ==BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
+                if (_currentPointerObject == BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
                 {
-                    _cardState = BattleCardState.InField; //カードの状態を変更
-                    BattleManager.Instance.Player.ChangeCurrentMana(-(_cardData.Cost));
-                    this.transform.SetParent(_currentPointerObject.transform);
+                    PlayCard(BattleManager.Instance.Player, _currentPointerObject.transform);
                 }
-                //違ったらraycastTargetを有効にして手札に戻す
                 else
                 {
                     this.transform.SetParent(BattleManager.Instance.OwnHandsUI.transform);
                 }
+
                 break;
         }
         _backGroundImage.raycastTarget = true;
     }
 
-    
+    private void PlayCard(UnitData unit, Transform destinationTransform)
+    {
+        _cardState = BattleCardState.InField; //カードの状態を変更
+        unit.ChangeCurrentMana(-(_cardData.Cost));
+        this.transform.SetParent(destinationTransform);
+
+    }
+
+    private void Attack(IDamage targetDamage)
+    {
+        targetDamage.Damage(-_cardData.Attack);
+        Debug.Log($"{targetDamage}に{_cardData.Attack}ダメージ");
+    }
+
+    private void Attack(GameObject target)
+    {
+        if (target && target.TryGetComponent(out IDamage damage))
+        {
+            Attack(damage);
+        }
+    }
+
 
     public void Damage(int value)
     {
         if (_cardState == BattleCardState.InField)
         {
             _cardData.ChangeHP(value);
-        }       
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
