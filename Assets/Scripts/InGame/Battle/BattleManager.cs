@@ -66,7 +66,7 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     BattleUIManager _battleUIManager = null;
-    public BattleUIManager BattleUIManagerInstance
+    private BattleUIManager BattleUIManagerInstance
     {
         get
         {
@@ -79,6 +79,10 @@ public class BattleManager : Singleton<BattleManager>
         }
         set { _battleUIManager = value; }
     }
+    public GameObject OwnHandsUI => BattleUIManagerInstance.OwnHands;
+    public GameObject OwnFields => BattleUIManagerInstance.OwnField;
+    public UnityEngine.UI.Button TurnEndButton => BattleUIManagerInstance.TurnEndButton;
+    public GameObject CurrentDrugParent => BattleUIManagerInstance.CurrentDrugParent;
 
     OpponentBehavior _opponentBehavior = null;
     public OpponentBehavior OpponentBehavior

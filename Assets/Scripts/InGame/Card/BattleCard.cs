@@ -42,7 +42,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
 
     /// <summary>キャッシュ用の変数</summary>
     GameObject _currentPointerObject = null;
-
     BattleCardState _cardState = BattleCardState.InHand;
     public void ChangeCardState(BattleCardState battleCardState)
     {
@@ -89,7 +88,6 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
         {
             _rectTransform = GetComponent<RectTransform>();
         }
-        _currentPointerObject = BattleManager.Instance.BattleUIManagerInstance.CurrentPointerObject;
 
         _skillPanel.SetSkillValue(_cardData.SkillValue);
     }
@@ -114,7 +112,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 //カードの下のObjectを取得したいからraycastTargetを無効にする
                 _backGroundImage.raycastTarget = false;
                 //ドラッグしてるとき用のオブジェクトの子オブジェクトにする
-                this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.CurrentDrugParent.transform);
+                this.transform.SetParent(BattleManager.Instance.CurrentDrugParent.transform);
                 break;
         }
     }
@@ -157,7 +155,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 break;
             case BattleCardState.InHand:
                 //自分のフィールドオブジェクトだったら子オブジェクトにする
-                if (_currentPointerObject == BattleManager.Instance.BattleUIManagerInstance.OwnField && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
+                if (_currentPointerObject ==BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
                 {
                     _cardState = BattleCardState.InField; //カードの状態を変更
                     BattleManager.Instance.Player.ChangeCurrentMana(-(_cardData.Cost));
@@ -166,7 +164,7 @@ public class BattleCard : MonoBehaviour, IDragHandler, IPointerUpHandler, IBegin
                 //違ったらraycastTargetを有効にして手札に戻す
                 else
                 {
-                    this.transform.SetParent(BattleManager.Instance.BattleUIManagerInstance.OwnHands.transform);
+                    this.transform.SetParent(BattleManager.Instance.OwnHandsUI.transform);
                 }
                 break;
         }

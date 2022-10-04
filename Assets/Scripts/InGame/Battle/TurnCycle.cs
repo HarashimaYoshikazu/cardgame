@@ -35,7 +35,7 @@ public class TurnCycle : MonoBehaviour
             _stateMachine.StartSetUp<OpponentTurn>();
         }
 
-        BattleManager.Instance.BattleUIManagerInstance.TurnEndButton.onClick.AddListener(() =>
+        BattleManager.Instance.TurnEndButton.onClick.AddListener(() =>
         {
             _stateMachine.Dispatch(EventEnum.MyTurnEnd);
         });

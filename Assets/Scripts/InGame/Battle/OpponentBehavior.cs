@@ -57,8 +57,7 @@ public class OpponentBehavior : MonoBehaviour
     {
         protected override void OnEnter(StateMachine<TaskEnum, OpponentBehavior>.State prevState)
         {
-            Debug.Log("‚±‚¤‚°‚«");         
-            //_stateMachine.Owner._opponentTaskStateMachine.Dispatch(TaskEnum.End);
+            Debug.Log("‚±‚¤‚°‚«");  
         }
 
         protected override void OnUpdate()
@@ -68,7 +67,6 @@ public class OpponentBehavior : MonoBehaviour
 
         protected override void OnExit(StateMachine<TaskEnum, OpponentBehavior>.State nextState)
         {
-            Debug.Log("‚±‚¤‚°‚«EXIT");
             BattleManager.Instance.TurnCycleInstance.ChangeState(TurnCycle.EventEnum.OpponentTurnEnd);
         }
     }

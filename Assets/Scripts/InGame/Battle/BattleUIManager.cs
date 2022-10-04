@@ -248,5 +248,16 @@ public class BattleUIManager : MonoBehaviour
                 break;
         }
     }
+    public bool TryGetRandomFieldsCard(out BattleCard card)
+    {
+        card = null;
+        if (_ownFieldCards.Count <= 0)
+        {
+            return false;
+        }
+        int rand = Random.Range(0, _ownFieldCards.Count);
+        card = _ownFieldCards[rand];
+        return true;
+    }
 }
 
