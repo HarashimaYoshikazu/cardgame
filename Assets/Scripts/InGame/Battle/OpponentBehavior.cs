@@ -57,7 +57,8 @@ public class OpponentBehavior : MonoBehaviour
     {
         protected override void OnEnter(StateMachine<TaskEnum, OpponentBehavior>.State prevState)
         {
-            Debug.Log("‚±‚¤‚°‚«");  
+            Debug.Log("‚±‚¤‚°‚«");
+            BattleManager.Instance.OpponentAttack();
         }
 
         protected override void OnUpdate()

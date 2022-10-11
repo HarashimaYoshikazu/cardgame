@@ -239,16 +239,41 @@ public class BattleUIManager : MonoBehaviour
                 break;
         }
     }
-    public bool TryGetRandomFieldsCard(out BattleCard card)
+    public bool TryGetRandomFieldsCard(UnitType unitType,out BattleCard card)
     {
         card = null;
-        if (_ownFieldCards.Count <= 0)
+        int rand = 0;
+        switch (unitType)
         {
-            return false;
+            case UnitType.Player:
+                if (_ownFieldCards.Count <= 0)
+                {
+                    break;
+                }
+                rand = Random.Range(0, _ownFieldCards.Count);
+                card = _ownFieldCards[rand];
+                return true;
+            case UnitType.Opponent:
+                if (_opponentFieldCards.Count <= 0)
+                {
+                    break;
+                }
+                rand = Random.Range(0, _opponentFieldCards.Count);
+                card = _opponentFieldCards[rand];
+                return true;
         }
-        int rand = Random.Range(0, _ownFieldCards.Count);
-        card = _ownFieldCards[rand];
-        return true;
+        return false;
+    }
+    public void AttackRandomCard(UnitType targetUnit,BattleCard sourceCard)
+    {
+        if (TryGetRandomFieldsCard(targetUnit, out BattleCard targetCard))
+        {
+            AttackCard(sourceCard, targetCard);
+        }
+    }
+    public void AttackCard(BattleCard source,BattleCard target)
+    {
+        source.Attack(target);
     }
 }
 

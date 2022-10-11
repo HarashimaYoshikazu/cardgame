@@ -130,7 +130,7 @@ public class BattleCard : MonoBehaviour, IDamage
                 //自分のフィールドオブジェクトだったら子オブジェクトにする
                 if (target == BattleManager.Instance.OwnFields && _cardData.Cost <= BattleManager.Instance.Player.CurrentMana)
                 {
-                    PlayCard(BattleManager.Instance.Player, target.transform);
+                    PlayCard(BattleManager.Instance.Player);
                 }
                 else
                 {
@@ -142,21 +142,19 @@ public class BattleCard : MonoBehaviour, IDamage
         _backGroundImage.raycastTarget = true;
     }
 
-    private void PlayCard(UnitData unit, Transform destinationTransform)
+    private void PlayCard(UnitData unit)
     {
-        _cardState = BattleCardState.InField; //カードの状態を変更
         unit.ChangeCurrentMana(-(_cardData.Cost));
-        this.transform.SetParent(destinationTransform);
-
+        BattleManager.Instance.PlayCard(unit.Type,CardID);
     }
 
-    private void Attack(IDamage targetDamage)
+    public void Attack(IDamage targetDamage)
     {
         targetDamage.Damage(-_cardData.Attack);
         Debug.Log($"{targetDamage}に{_cardData.Attack}ダメージ");
     }
 
-    private void Attack(GameObject target)
+    public void Attack(GameObject target)
     {
         if (target && target.TryGetComponent(out IDamage damage))
         {

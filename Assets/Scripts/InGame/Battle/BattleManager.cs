@@ -206,6 +206,14 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    public void OpponentAttack()
+    {
+        if (_battleUIManager.TryGetRandomFieldsCard(UnitType.Opponent,out BattleCard battleCard))
+        {
+            _battleUIManager.AttackRandomCard(UnitType.Player,battleCard);
+        }    
+    }
+
     //ソロプレイ想定
     const int _addMana = 1;
     public void PlayerTurnStart()
