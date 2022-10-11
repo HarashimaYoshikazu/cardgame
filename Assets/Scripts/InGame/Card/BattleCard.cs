@@ -145,7 +145,7 @@ public class BattleCard : MonoBehaviour, IDamage
     private void PlayCard(UnitData unit)
     {
         unit.ChangeCurrentMana(-(_cardData.Cost));
-        BattleManager.Instance.PlayCard(unit.Type,CardID);
+        BattleManager.Instance.PlayCard(unit.Type,this);
     }
 
     public void Attack(IDamage targetDamage)

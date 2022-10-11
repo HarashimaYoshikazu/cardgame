@@ -148,7 +148,7 @@ public class BattleUIManager : MonoBehaviour
         //_debugOpponentTurnEndButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(-700, 0, 0);
     }
 
-    BattleCard ConvertCard(BattleCard[] battleCards, int cardID)
+    public BattleCard ConvertCard(BattleCard[] battleCards, int cardID)
     {
         var cards = battleCards.Where(c => c.CardID == cardID);
         if (cards.Count() <= 0)

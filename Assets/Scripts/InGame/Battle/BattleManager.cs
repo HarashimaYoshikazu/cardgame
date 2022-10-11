@@ -178,6 +178,31 @@ public class BattleManager : Singleton<BattleManager>
         _battleUIManager.CreateHandsObject(unit.Type, cardID);
     }
 
+    public void PlayCard(UnitType unitType,BattleCard card)
+    {
+        UnitData unit = null;
+        switch (unitType)
+        {
+            case UnitType.Player:
+                unit = _player;
+                break;
+            case UnitType.Opponent:
+                unit = _enemy;
+                break;
+        }
+        if (unit == null)
+        {
+            Debug.LogError($"UnitTypeのパラメータが不正な値です。：{unitType}");
+        }
+        else
+        {
+            unit.AddFields(card.CardID);
+            unit.RemoveHands(card.CardID);
+            _battleUIManager.AddField(unit.Type, card);
+            _battleUIManager.RemoveHand(unit.Type, card);
+        }
+    }
+
     public void PlayCard(UnitType unitType, int cardID)
     {
         UnitData unit = null;
